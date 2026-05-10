@@ -1,0 +1,22 @@
+title: HTTP 5xx response surge
+id: f0e1d2c3-b4a5-4968-8d72-6e5d4c3b2a19
+status: experimental
+description: An ingress or sidecar emitted a 5xx response.
+references:
+  - https://www.rfc-editor.org/rfc/rfc7231
+author: skaldhall
+date: 2026/05/10
+tags:
+  - attack.impact
+logsource:
+  category: webserver
+detection:
+  selection_class:
+    class_uid: 4002
+  selection_5xx:
+    http_response.code|startswith: '5'
+  condition: selection_class and selection_5xx
+falsepositives:
+  - Application-side bugs unrelated to security
+  - Planned maintenance
+level: low

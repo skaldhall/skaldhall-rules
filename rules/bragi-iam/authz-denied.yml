@@ -1,0 +1,22 @@
+title: AuthZ policy denied request
+id: de45fa67-8901-2345-defa-456789012345
+status: experimental
+description: Envoy/Istio AuthorizationPolicy denied a request.
+references:
+  - https://istio.io/latest/docs/reference/config/security/authorization-policy/
+author: skaldhall
+date: 2026/05/10
+tags:
+  - attack.discovery
+  - attack.t1078
+logsource:
+  product: istio
+detection:
+  selection:
+    class_uid: 3005
+  selection_deny:
+    activity_id: 4
+  condition: selection and selection_deny
+falsepositives:
+  - Workloads probing endpoints during deploy / failover
+level: low

@@ -1,0 +1,24 @@
+title: CIS benchmark check failed
+id: cd34ef56-7890-1234-cdef-345678901234
+status: experimental
+description: A kube-bench, polaris, or trivy-config-audit run reported a failed compliance check.
+references:
+  - https://www.cisecurity.org/benchmark/kubernetes
+author: skaldhall
+date: 2026/05/10
+tags:
+  - attack.defense_evasion
+logsource:
+  category: compliance
+detection:
+  selection:
+    class_uid: 2006
+    activity_id: 1
+    severity_id:
+      - 3
+      - 4
+      - 5
+  condition: selection
+falsepositives:
+  - Known-accepted-risk failures (silenced by tag)
+level: low

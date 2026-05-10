@@ -1,0 +1,23 @@
+title: Network policy denied flow
+id: a1b2c3d4-e5f6-4789-9012-3456789abcde
+status: experimental
+description: A network policy (Calico, Cilium, Hubble, Antrea) denied a flow.
+references:
+  - https://docs.cilium.io/en/stable/policy/
+author: skaldhall
+date: 2026/05/10
+tags:
+  - attack.discovery
+  - attack.t1046
+logsource:
+  category: network_connection
+detection:
+  selection_class:
+    class_uid: 4001
+  selection_denied:
+    activity_id: 5
+  condition: selection_class and selection_denied
+falsepositives:
+  - Misconfigured workloads
+  - Default-deny policies in dev environments
+level: low

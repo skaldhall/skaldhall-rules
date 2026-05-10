@@ -1,0 +1,24 @@
+title: Falco — shell spawned in container
+id: 9b8a7c6d-5e4f-3a2b-1c0d-9e8f7a6b5c4d
+status: experimental
+description: Falco reported a shell spawned inside a container, normalized to OCSF Detection Finding (class 2004).
+references:
+  - https://falco.org/docs/rules/supported-rules/
+  - https://attack.mitre.org/techniques/T1059/
+author: skaldhall
+date: 2026/05/10
+tags:
+  - attack.execution
+  - attack.t1059.004
+logsource:
+  product: falco
+  service: runtime
+detection:
+  selection:
+    class_uid: 2004
+    finding.title: Shell Spawned in Container
+  condition: selection
+falsepositives:
+  - Init containers running shell-based bootstrap
+  - kubectl debug sessions
+level: high

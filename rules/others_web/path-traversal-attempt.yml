@@ -1,0 +1,27 @@
+title: HTTP path traversal pattern
+id: 1f2e3d4c-5b6a-4798-9081-23456abcdef0
+status: experimental
+description: A client requested a URL containing a directory-traversal sequence.
+references:
+  - https://owasp.org/www-community/attacks/Path_Traversal
+author: skaldhall
+date: 2026/05/10
+tags:
+  - attack.initial_access
+  - attack.t1190
+logsource:
+  category: webserver
+detection:
+  selection_class:
+    class_uid: 4002
+  selection_path:
+    http_request.url.path|contains:
+      - '../'
+      - '..\\'
+      - '%2e%2e'
+      - '..%2f'
+      - '..%5c'
+  condition: selection_class and selection_path
+falsepositives:
+  - Legitimate file-paths that include literal '..' (unusual)
+level: high

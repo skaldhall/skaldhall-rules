@@ -1,0 +1,22 @@
+title: Critical CVE found in deployed image
+id: ab12cd34-ef56-7890-abcd-ef1234567890
+status: experimental
+description: A critical-severity CVE was detected in an image already running in the cluster (Trivy operator).
+references:
+  - https://aquasecurity.github.io/trivy-operator/
+author: skaldhall
+date: 2026/05/10
+tags:
+  - attack.initial_access
+logsource:
+  product: trivy
+detection:
+  selection:
+    class_uid: 2002
+    severity_id:
+      - 5
+      - 6
+  condition: selection
+falsepositives:
+  - Vulnerabilities in workloads that don't run the affected code path
+level: high

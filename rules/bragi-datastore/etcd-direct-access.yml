@@ -1,0 +1,22 @@
+title: Direct etcd access detected
+id: f0123456-7890-abcd-ef01-23456789abcd
+status: experimental
+description: A client connected directly to etcd outside of kube-apiserver.
+references:
+  - https://etcd.io/docs/v3.5/op-guide/security/
+author: skaldhall
+date: 2026/05/10
+tags:
+  - attack.credential_access
+  - attack.t1552
+logsource:
+  product: etcd
+detection:
+  selection:
+    class_uid: 6008
+    metadata.product.name: etcd
+  condition: selection
+falsepositives:
+  - Cluster admins running break-glass procedures
+  - Backup tooling
+level: medium

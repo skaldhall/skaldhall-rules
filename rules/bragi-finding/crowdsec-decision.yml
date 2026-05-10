@@ -1,0 +1,20 @@
+title: CrowdSec decision applied
+id: 6c5d4e3f-2a1b-0987-6543-21fedcba0987
+status: experimental
+description: CrowdSec decided a remediation (ban, captcha) for a source IP.
+references:
+  - https://docs.crowdsec.net/docs/concepts/
+author: skaldhall
+date: 2026/05/10
+tags:
+  - attack.initial_access
+logsource:
+  product: crowdsec
+detection:
+  selection:
+    class_uid: 2004
+    metadata.product.name: CrowdSec
+  condition: selection
+falsepositives:
+  - Misconfigured scenarios in dev environments
+level: medium

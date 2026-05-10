@@ -1,0 +1,26 @@
+title: Admission-time policy violation
+id: 5d4c3b2a-1908-7654-3210-fedcba987654
+status: experimental
+description: An admission controller (Gatekeeper, Kyverno, jsPolicy, Kubewarden) blocked a resource for violating a security policy.
+references:
+  - https://open-policy-agent.github.io/gatekeeper/website/docs/
+author: skaldhall
+date: 2026/05/10
+tags:
+  - attack.persistence
+logsource:
+  product: kubernetes
+  category: admission
+detection:
+  selection:
+    class_uid: 2004
+  selection_action:
+    activity_id: 1
+    severity_id:
+      - 3
+      - 4
+      - 5
+  condition: selection and selection_action
+falsepositives:
+  - Developers learning the policy set
+level: medium

@@ -1,0 +1,22 @@
+title: cert-manager certificate renewal failure
+id: ef67890a-1234-5678-ef01-234567890abc
+status: experimental
+description: cert-manager failed to renew or issue a Certificate.
+references:
+  - https://cert-manager.io/docs/troubleshooting/
+author: skaldhall
+date: 2026/05/10
+tags:
+  - attack.impact
+logsource:
+  product: cert-manager
+detection:
+  selection:
+    class_uid: 6002
+  selection_fail:
+    activity_id: 4
+    status_id: 2
+  condition: selection and selection_fail
+falsepositives:
+  - Transient ACME / DNS-01 issues
+level: medium

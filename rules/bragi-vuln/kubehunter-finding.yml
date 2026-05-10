@@ -1,0 +1,20 @@
+title: kube-hunter found a cluster vulnerability
+id: bc23de45-fa67-8901-bcde-f23456789012
+status: experimental
+description: kube-hunter scanned the cluster and reported a vulnerability.
+references:
+  - https://github.com/aquasecurity/kube-hunter
+author: skaldhall
+date: 2026/05/10
+tags:
+  - attack.discovery
+logsource:
+  product: kube-hunter
+detection:
+  selection:
+    class_uid: 2002
+    metadata.product.name: kube-hunter
+  condition: selection
+falsepositives:
+  - Findings on intentionally-exposed components
+level: medium

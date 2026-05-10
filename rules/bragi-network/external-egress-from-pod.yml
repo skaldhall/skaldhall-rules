@@ -1,0 +1,46 @@
+title: Container connecting to non-RFC1918 destination
+id: c2a4b6d8-e0f2-4a6c-8e0f-2a4b6c8d0e2f
+status: experimental
+description: A container initiated a network connection to an external (non-RFC1918) destination.
+references:
+  - https://attack.mitre.org/tactics/TA0011/
+author: skaldhall
+date: 2026/05/10
+tags:
+  - attack.command_and_control
+  - attack.t1071
+logsource:
+  category: network_connection
+detection:
+  selection_class:
+    class_uid: 4001
+  selection_egress:
+    activity_id:
+      - 1
+      - 6
+  exclude_private:
+    dst_endpoint.ip|startswith:
+      - '10.'
+      - '192.168.'
+      - '172.16.'
+      - '172.17.'
+      - '172.18.'
+      - '172.19.'
+      - '172.20.'
+      - '172.21.'
+      - '172.22.'
+      - '172.23.'
+      - '172.24.'
+      - '172.25.'
+      - '172.26.'
+      - '172.27.'
+      - '172.28.'
+      - '172.29.'
+      - '172.30.'
+      - '172.31.'
+      - 'fd'
+      - 'fe80:'
+  condition: selection_class and selection_egress and not exclude_private
+falsepositives:
+  - Workloads that legitimately reach the public internet (set up an allowlist)
+level: medium

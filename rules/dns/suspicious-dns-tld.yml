@@ -1,0 +1,27 @@
+title: DNS query for suspicious TLD
+id: 4d5c6b7a-8990-4231-9876-bcd012345678
+status: experimental
+description: A pod issued a DNS query for a TLD commonly used in phishing or malware C2.
+references:
+  - https://attack.mitre.org/techniques/T1071/004/
+author: skaldhall
+date: 2026/05/10
+tags:
+  - attack.command_and_control
+  - attack.t1071.004
+logsource:
+  category: dns
+detection:
+  selection_class:
+    class_uid: 4003
+  selection_tld:
+    query.hostname|endswith:
+      - '.zip'
+      - '.mov'
+      - '.top'
+      - '.xyz'
+      - '.tk'
+  condition: selection_class and selection_tld
+falsepositives:
+  - Workloads that legitimately fetch from these TLDs
+level: low

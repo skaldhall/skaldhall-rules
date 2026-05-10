@@ -1,0 +1,21 @@
+title: AppArmor denied operation
+id: 12345678-9abc-def0-1234-56789abcdef0
+status: experimental
+description: AppArmor blocked a syscall on a confined container.
+references:
+  - https://gitlab.com/apparmor/apparmor/-/wikis/Documentation
+author: skaldhall
+date: 2026/05/10
+tags:
+  - attack.privilege_escalation
+logsource:
+  product: apparmor
+detection:
+  selection:
+    class_uid: 1001
+  selection_deny:
+    activity_id: 6
+  condition: selection and selection_deny
+falsepositives:
+  - Profiles being newly enrolled (expect noise during ramp)
+level: medium

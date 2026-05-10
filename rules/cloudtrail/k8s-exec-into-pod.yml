@@ -1,0 +1,25 @@
+title: Kubectl exec into running pod
+id: 7f3a9b2c-1d4e-4a8f-b6c2-9e0f1234abcd
+status: experimental
+description: kubectl exec was used to run a command inside a running pod (k8s API audit, OCSF API Activity 6003).
+references:
+  - https://kubernetes.io/docs/tasks/debug/debug-application/get-shell-running-container/
+  - https://attack.mitre.org/techniques/T1609/
+author: skaldhall
+date: 2026/05/10
+tags:
+  - attack.execution
+  - attack.t1609
+logsource:
+  product: kubernetes
+  service: audit
+detection:
+  selection:
+    class_uid: 6003
+    api.subresource: exec
+  condition: selection
+falsepositives:
+  - Authorized administrative operations
+  - CI/CD test pipelines that run inside pods
+  - Engineer-driven debugging
+level: medium
