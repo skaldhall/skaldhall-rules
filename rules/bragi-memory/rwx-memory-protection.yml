@@ -1,0 +1,25 @@
+title: Writable-executable memory protection change
+id: e4a70c19-5d82-4b36-a0f8-9c1e6b3d7a25
+status: experimental
+description: >
+  A process changed memory protections. Marking memory both writable and
+  executable is the classic shape of code injection and in-memory payload
+  execution.
+references:
+  - https://attack.mitre.org/techniques/T1055/
+author: skaldhall
+date: 2026/07/17
+tags:
+  - attack.defense_evasion
+  - attack.privilege_escalation
+  - attack.t1055
+logsource:
+  product: linux
+detection:
+  selection:
+    class_uid: 1004
+  condition: selection
+falsepositives:
+  - JIT runtimes (JVM, V8/Node, .NET, Python with JIT) legitimately mprotect RWX
+  - Dynamic linkers mprotect the GOT on nearly every exec — tune by binary
+level: medium

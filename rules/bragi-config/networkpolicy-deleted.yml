@@ -1,0 +1,26 @@
+title: NetworkPolicy deleted
+id: 9a4d1e72-3b58-4c07-8f21-5d6e0b9a2c48
+status: experimental
+description: >
+  A NetworkPolicy was deleted. Removing segmentation is a classic step before
+  lateral movement — the workloads the policy covered are now reachable by (and
+  can reach) anything the remaining policies allow, which in a namespace without
+  default-deny means everything.
+references:
+  - https://attack.mitre.org/techniques/T1562/007/
+author: skaldhall
+date: 2026/07/18
+tags:
+  - attack.defense_evasion
+  - attack.t1562.007
+logsource:
+  product: kubernetes
+detection:
+  selection:
+    class_uid: 6003
+    activity_id: 4
+    api.resource.type: networkpolicies
+  condition: selection
+falsepositives:
+  - Legitimate policy refactors and helm upgrades delete and recreate policies
+level: high

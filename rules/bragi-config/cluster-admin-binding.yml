@@ -1,0 +1,30 @@
+title: Binding to cluster-admin created or changed
+id: 5e8b3f91-7d24-4a6c-9e05-1c4f8a2d7b63
+status: experimental
+description: >
+  A ClusterRoleBinding referencing cluster-admin (or a wildcard-equivalent role)
+  was created or modified. Granting cluster-admin is the single highest-impact
+  RBAC change possible — the subject owns the cluster.
+references:
+  - https://attack.mitre.org/techniques/T1098/
+author: skaldhall
+date: 2026/07/18
+tags:
+  - attack.persistence
+  - attack.privilege_escalation
+  - attack.t1098
+logsource:
+  product: kubernetes
+detection:
+  selection:
+    class_uid: 6003
+    api.resource.type: clusterrolebindings
+    summary.cluster_admin: true
+  selection_verbs:
+    activity_id:
+      - 1
+      - 3
+  condition: selection and selection_verbs
+falsepositives:
+  - Cluster bootstrap and some operators legitimately bind cluster-admin
+level: high

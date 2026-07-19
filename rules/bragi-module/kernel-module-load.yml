@@ -1,0 +1,25 @@
+title: Kernel module loaded
+id: 3f1c6a20-8b47-4d2e-9c11-1a5b7e0d4c31
+status: experimental
+description: >
+  A kernel module was requested or loaded. On a running Kubernetes node this is
+  rare and high-signal: loading a module is a direct path to kernel-level
+  persistence and to disabling other security tooling.
+references:
+  - https://attack.mitre.org/techniques/T1547/006/
+author: skaldhall
+date: 2026/07/17
+tags:
+  - attack.persistence
+  - attack.privilege_escalation
+  - attack.t1547.006
+logsource:
+  product: linux
+detection:
+  selection:
+    class_uid: 1005
+  condition: selection
+falsepositives:
+  - Node bootstrap and CNI/CSI installation load modules legitimately
+  - Autoloaded modules from ordinary syscalls (e.g. first use of a netfilter feature)
+level: high

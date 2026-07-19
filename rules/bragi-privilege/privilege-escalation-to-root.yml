@@ -1,0 +1,24 @@
+title: Privilege change to root
+id: b2d81f47-6c30-4a9e-b715-3e8d5c2a90f6
+status: experimental
+description: >
+  A process changed credentials or capabilities. In a container workload,
+  transitioning to uid 0 or raising capabilities at runtime is uncommon and is a
+  standard post-exploitation primitive.
+references:
+  - https://attack.mitre.org/techniques/T1548/
+author: skaldhall
+date: 2026/07/17
+tags:
+  - attack.privilege_escalation
+  - attack.t1548
+logsource:
+  product: linux
+detection:
+  selection:
+    class_uid: 3001
+  condition: selection
+falsepositives:
+  - Container runtimes drop capabilities at start, which trips capset legitimately
+  - setuid binaries (ping, sudo) in images that still ship them
+level: medium

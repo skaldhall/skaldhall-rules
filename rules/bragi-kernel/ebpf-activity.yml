@@ -1,0 +1,24 @@
+title: eBPF program or map activity
+id: 7c9e4b83-2a15-4f60-8d3a-6b2c9e1f0a74
+status: experimental
+description: >
+  eBPF program verification, map creation, or perf-event allocation was observed.
+  eBPF is a privilege boundary: unexpected BPF activity from a workload is a
+  strong indicator of rootkit-style tooling or security-tooling tampering.
+references:
+  - https://attack.mitre.org/techniques/T1014/
+author: skaldhall
+date: 2026/07/17
+tags:
+  - attack.defense_evasion
+  - attack.t1014
+logsource:
+  product: linux
+detection:
+  selection:
+    class_uid: 1003
+  condition: selection
+falsepositives:
+  - CNI (Cilium), Tetragon, Falco and other eBPF-based tooling legitimately load programs
+  - Expect steady volume on nodes running an eBPF CNI; tune by container/pod
+level: medium
