@@ -1,0 +1,23 @@
+title: Network tunnel established
+id: 4d81f9b2-6c30-4a7e-95d1-2b8c6e0a3f74
+status: experimental
+description: >
+  Zeek observed an encapsulated tunnel (GRE/IPIP/VXLAN/Teredo/HTTP CONNECT).
+  Tunnelling is how an operator moves traffic past segmentation and egress
+  controls, and is a common command-and-control carrier.
+references:
+  - https://attack.mitre.org/techniques/T1572/
+author: skaldhall
+date: 2026/07/21
+tags:
+  - attack.command_and_control
+  - attack.t1572
+logsource:
+  product: zeek
+detection:
+  selection:
+    class_uid: 4014
+  condition: selection
+falsepositives:
+  - CNI overlays (VXLAN/Geneve) if Zeek is monitoring the underlay
+level: high

@@ -1,0 +1,24 @@
+title: Namespace deleted
+id: 3c7e5b18-9d42-4a06-b1f8-6e0c2a4d7539
+status: experimental
+description: >
+  A namespace was deleted, which cascades to every workload, secret and policy
+  inside it. Destructive and rarely routine outside a teardown window.
+references:
+  - https://attack.mitre.org/techniques/T1485/
+author: skaldhall
+date: 2026/07/21
+tags:
+  - attack.impact
+  - attack.t1485
+logsource:
+  product: kubernetes
+detection:
+  selection:
+    class_uid: 6003
+    activity_id: 4
+    resource.type: namespaces
+  condition: selection
+falsepositives:
+  - Ephemeral CI/preview namespaces torn down on merge
+level: high

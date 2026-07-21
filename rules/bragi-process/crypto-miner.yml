@@ -1,0 +1,33 @@
+title: Cryptocurrency miner indicators
+id: 1f6c8d05-9b23-4e70-a418-5d2f7b9c063e
+status: experimental
+description: >
+  A process matching known mining software or a stratum pool argument was
+  executed. Resource hijacking is the most common monetisation of a compromised
+  cluster.
+references:
+  - https://attack.mitre.org/techniques/T1496/
+author: skaldhall
+date: 2026/07/21
+tags:
+  - attack.impact
+  - attack.t1496
+logsource:
+  product: tetragon
+detection:
+  binaries:
+    process.file.path|endswith:
+      - /xmrig
+      - /minerd
+      - /cpuminer
+      - /ethminer
+  args:
+    process.cmd_line|contains:
+      - 'stratum+tcp://'
+      - '--donate-level'
+  selection:
+    class_uid: 1007
+  condition: selection and (binaries or args)
+falsepositives:
+  - Deliberate benchmarking or research workloads
+level: critical

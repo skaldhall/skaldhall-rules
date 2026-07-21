@@ -1,0 +1,25 @@
+title: DNS query with tunneling-length label
+id: 4e0a7d93-8b16-45c2-9f30-1d7c6b2e5804
+status: experimental
+description: >
+  A DNS query carried an abnormally long single label. Encoding data into the
+  hostname is the standard DNS-tunnelling carrier for both exfiltration and
+  command-and-control.
+references:
+  - https://attack.mitre.org/techniques/T1071/004/
+author: skaldhall
+date: 2026/07/21
+tags:
+  - attack.command_and_control
+  - attack.t1071.004
+  - attack.exfiltration
+logsource:
+  product: zeek
+detection:
+  selection:
+    class_uid: 4003
+    query.hostname|re: '^[A-Za-z0-9+/=_-]{40,}\.'
+  condition: selection
+falsepositives:
+  - Some CDNs and antivirus/reputation lookups encode long tokens into hostnames
+level: high

@@ -1,0 +1,23 @@
+title: SMB session established
+id: 2f1c8a94-7d63-4b0e-9a52-1c7e4b8d3a61
+status: experimental
+description: >
+  An SMB session was negotiated. SMB is not part of any normal container
+  workload path; inside a cluster it is a strong lateral-movement signal
+  (mounting a share to stage or pull tooling).
+references:
+  - https://attack.mitre.org/techniques/T1021/002/
+author: skaldhall
+date: 2026/07/21
+tags:
+  - attack.lateral_movement
+  - attack.t1021.002
+logsource:
+  product: zeek
+detection:
+  selection:
+    class_uid: 4006
+  condition: selection
+falsepositives:
+  - Workloads that legitimately mount CIFS/SMB volumes
+level: medium

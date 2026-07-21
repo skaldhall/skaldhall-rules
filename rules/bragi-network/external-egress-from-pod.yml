@@ -43,4 +43,5 @@ detection:
   condition: selection_class and selection_egress and not exclude_private
 falsepositives:
   - Workloads that legitimately reach the public internet (set up an allowlist)
-level: medium
+# level rationale: every image pull, DNS forward and cloud API call is non-RFC1918; at medium this drowns the queue
+level: low

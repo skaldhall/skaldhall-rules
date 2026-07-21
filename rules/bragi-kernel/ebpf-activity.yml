@@ -21,4 +21,5 @@ detection:
 falsepositives:
   - CNI (Cilium), Tetragon, Falco and other eBPF-based tooling legitimately load programs
   - Expect steady volume on nodes running an eBPF CNI; tune by container/pod
-level: medium
+# level rationale: eBPF load/map activity is continuous in any cluster running Tetragon or Cilium; as a standing medium it is pure alert fatigue, but it stays valuable as a correlation signal
+level: low

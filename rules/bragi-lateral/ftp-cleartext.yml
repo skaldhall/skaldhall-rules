@@ -1,0 +1,22 @@
+title: Cleartext FTP session
+id: 9c5a2e83-1b47-4d60-a3f8-6e0b9d24c715
+status: experimental
+description: >
+  An FTP control session was observed. FTP carries credentials and payloads in
+  cleartext, so any use is both a credential-exposure and a staging concern.
+references:
+  - https://attack.mitre.org/techniques/T1040/
+author: skaldhall
+date: 2026/07/21
+tags:
+  - attack.credential_access
+  - attack.t1040
+logsource:
+  product: zeek
+detection:
+  selection:
+    class_uid: 4008
+  condition: selection
+falsepositives:
+  - Legacy batch jobs that still transfer over FTP
+level: medium

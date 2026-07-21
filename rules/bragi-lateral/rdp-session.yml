@@ -1,0 +1,23 @@
+title: RDP session observed
+id: 6b3e0d17-5a48-4c92-8f01-9d2a7c4e6b35
+status: experimental
+description: >
+  Remote Desktop traffic was observed. RDP has no place in a Linux container
+  cluster; seeing it means either a Windows node is being reached laterally or
+  a pod is proxying to one.
+references:
+  - https://attack.mitre.org/techniques/T1021/001/
+author: skaldhall
+date: 2026/07/21
+tags:
+  - attack.lateral_movement
+  - attack.t1021.001
+logsource:
+  product: zeek
+detection:
+  selection:
+    class_uid: 4005
+  condition: selection
+falsepositives:
+  - Clusters with Windows nodes under legitimate administration
+level: medium

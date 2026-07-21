@@ -1,0 +1,27 @@
+title: Container escape tooling executed
+id: 8a2d6f31-4e97-4b58-a0c3-7f1e9b5d2064
+status: experimental
+description: >
+  A namespace-manipulation binary ran inside a container. nsenter/unshare/setns
+  are the standard way out of a container's namespaces onto the node, and have
+  no legitimate use inside an application image.
+references:
+  - https://attack.mitre.org/techniques/T1611/
+author: skaldhall
+date: 2026/07/21
+tags:
+  - attack.privilege_escalation
+  - attack.t1611
+logsource:
+  product: tetragon
+detection:
+  selection:
+    class_uid: 1007
+    process.file.path|endswith:
+      - /nsenter
+      - /unshare
+      - /setns
+  condition: selection
+falsepositives:
+  - Node-level debug tooling and privileged operators that legitimately enter namespaces
+level: high

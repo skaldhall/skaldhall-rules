@@ -1,0 +1,33 @@
+title: Write to sensitive system file
+id: 7b4a1e69-0c85-4f23-9d16-8a3e5c70b2d4
+status: experimental
+description: >
+  A write touched an account, SSH-trust or scheduler file. These are the
+  classic persistence footholds — adding a user, planting an authorized_keys
+  entry, or dropping a cron job.
+references:
+  - https://attack.mitre.org/techniques/T1098/
+  - https://attack.mitre.org/techniques/T1053/003/
+author: skaldhall
+date: 2026/07/21
+tags:
+  - attack.persistence
+  - attack.t1098
+  - attack.t1053.003
+logsource:
+  product: tetragon
+detection:
+  selection:
+    class_uid: 1001
+  paths:
+    file.path|contains:
+      - /etc/passwd
+      - /etc/shadow
+      - /etc/sudoers
+      - .ssh/authorized_keys
+      - /etc/cron
+      - /var/spool/cron
+  condition: selection and paths
+falsepositives:
+  - Image build steps and config-management agents that legitimately manage these files
+level: high

@@ -1,0 +1,31 @@
+title: Reverse shell pattern in command line
+id: 5e9b0c47-2a68-4d31-8f75-3c1a6e8b4092
+status: experimental
+description: >
+  A process was launched with a command line matching a reverse-shell idiom —
+  bash /dev/tcp redirection or netcat with command execution. This is
+  post-exploitation, not administration.
+references:
+  - https://attack.mitre.org/techniques/T1059/
+author: skaldhall
+date: 2026/07/21
+tags:
+  - attack.execution
+  - attack.t1059
+  - attack.t1059.004
+logsource:
+  product: tetragon
+detection:
+  selection:
+    class_uid: 1007
+  patterns:
+    process.cmd_line|contains:
+      - /dev/tcp/
+      - /dev/udp/
+      - 'nc -e'
+      - 'ncat -e'
+      - 'mkfifo /tmp'
+  condition: selection and patterns
+falsepositives:
+  - Health-check scripts that probe TCP with bash redirection
+level: high

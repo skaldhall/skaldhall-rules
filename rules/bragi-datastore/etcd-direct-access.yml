@@ -19,4 +19,5 @@ detection:
 falsepositives:
   - Cluster admins running break-glass procedures
   - Backup tooling
-level: medium
+# level rationale: direct etcd access bypasses the API server, its RBAC and its audit trail entirely
+level: high
