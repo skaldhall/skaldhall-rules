@@ -16,11 +16,19 @@ tags:
 logsource:
   product: kubernetes
 detection:
-  selection:
+  base:
     class_uid: 6003
     activity_id: 4
+  # Two producers emit OCSF 6003 for a Kubernetes object and they nest the
+  # resource differently: the kube-apiserver audit source puts it at
+  # `resource.type`, the operator's state-watch inventory at
+  # `api.resource.type`. Matching only one silently halves the detection — and
+  # it was the audit shape, the only one that names the human, that was missed.
+  res_audit:
+    resource.type: networkpolicies
+  res_watch:
     api.resource.type: networkpolicies
-  condition: selection
+  condition: base and (res_audit or res_watch)
 falsepositives:
   - Legitimate policy refactors and helm upgrades delete and recreate policies
 level: high

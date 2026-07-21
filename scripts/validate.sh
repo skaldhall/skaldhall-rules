@@ -6,9 +6,16 @@
 #   - file lives under rules/<known-category>/
 cd "$(dirname "$0")/.."
 
-KNOWN_CATEGORIES=(linux network others_web dns cloudtrail \
+# MUST track ocsfClassToSigmaCategories in bragi's
+# services/operator/internal/controller/security_analytics.go. A rule in a
+# category the operator does not map is never attached to any detector, so it
+# can never fire — which is exactly what this check is for. (cloudtrail was
+# deliberately dropped there: it made every k8s finding read "AWS Cloudtrail".)
+KNOWN_CATEGORIES=(linux network others_web dns \
   bragi-process bragi-network bragi-finding bragi-vuln bragi-compliance \
-  bragi-iam bragi-lifecycle bragi-datastore bragi-remediation bragi-policy)
+  bragi-iam bragi-lifecycle bragi-datastore bragi-remediation bragi-policy \
+  bragi-config bragi-kernel bragi-memory bragi-module bragi-privilege \
+  bragi-lateral bragi-c2)
 
 is_known_cat() {
   for c in "${KNOWN_CATEGORIES[@]}"; do

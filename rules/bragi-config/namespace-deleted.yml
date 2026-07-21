@@ -14,11 +14,14 @@ tags:
 logsource:
   product: kubernetes
 detection:
-  selection:
+  base:
     class_uid: 6003
     activity_id: 4
+  res_audit:
     resource.type: namespaces
-  condition: selection
+  res_watch:
+    api.resource.type: namespaces
+  condition: base and (res_audit or res_watch)
 falsepositives:
   - Ephemeral CI/preview namespaces torn down on merge
 level: high

@@ -15,14 +15,17 @@ tags:
 logsource:
   product: kubernetes
 detection:
-  selection:
+  base:
     class_uid: 6003
-    resource.type: cronjobs
   verbs:
     activity_id:
       - 1
       - 3
-  condition: selection and verbs
+  res_audit:
+    resource.type: cronjobs
+  res_watch:
+    api.resource.type: cronjobs
+  condition: base and verbs and (res_audit or res_watch)
 falsepositives:
   - Normal application deployments that ship CronJobs
 level: medium

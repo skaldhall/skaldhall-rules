@@ -14,10 +14,17 @@ logsource:
   product: kubernetes
   service: audit
 detection:
+  # `api.subresource` is not emitted by either 6003 producer, so the original
+  # form of this rule could never fire. The exec subresource is visible in the
+  # audit request path, which is mapped.
   selection:
     class_uid: 6003
-    api.subresource: exec
-  condition: selection
+    resource.type: pods
+  paths:
+    http_request.url.path|contains:
+      - '/exec'
+      - '/attach'
+  condition: selection and paths
 falsepositives:
   - Authorized administrative operations
   - CI/CD test pipelines that run inside pods
