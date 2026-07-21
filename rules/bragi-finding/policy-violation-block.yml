@@ -20,7 +20,28 @@ detection:
       - 3
       - 4
       - 5
-  condition: selection and selection_action
+  # The findings-sync mirror writes Security Analytics findings into this SAME
+  # index as 2004 docs with activity_id 1 and the rule's severity — i.e. the
+  # exact shape this rule selects. Without this exclusion every medium+ mirrored
+  # finding matched, produced a new SA finding, was mirrored again, matched
+  # again: a self-amplifying detection loop, one extra finding per detector
+  # cycle, forever (observed live: 2 loop findings within minutes of the
+  # detector existing). This rule must only ever see FIRST-PARTY detection
+  # products (Falco, Gatekeeper, CrowdSec...), never the mirror of its own
+  # output.
+  #
+  # The discriminator must be SINGLE-TOKEN. Two candidates failed first:
+  # metadata.log_name is absent from every first-party pipeline, and SA
+  # compiles `not x: v` as `NOT x:v AND _exists_:x`, which would have excluded
+  # everything; metadata.product.name ("OpenSearch Security Analytics") is
+  # multi-word, and SA's doc-level query escapes the spaces as `_ws_` — a form
+  # that never matches the stored value, observed live: the negation was dead
+  # and the loop kept amplifying with the "fix" deployed. vendor_name is
+  # "Skaldhall" — one token, set by the mirror alone on 2004 (every registry
+  # pipeline writes its own vendor), and verified to actually negate.
+  mirrored:
+    metadata.product.vendor_name: Skaldhall
+  condition: selection and selection_action and not mirrored
 falsepositives:
   - Developers learning the policy set
 level: medium
