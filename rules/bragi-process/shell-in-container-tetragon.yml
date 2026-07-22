@@ -17,16 +17,32 @@ logsource:
 detection:
   selection_class:
     class_uid: 1007
-  selection_shell:
+  # The binary itself is the signal. A bare `sh`/`bash` exec (kubectl exec, a
+  # script spawning a shell) has NO arguments, so process.cmd_line is EMPTY —
+  # matching only cmd_line misses the most common case. process.file.path is the
+  # executable path (/bin/sh) and is always populated; match it by basename.
+  shell_bin:
+    process.file.path|endswith:
+      - '/sh'
+      - '/bash'
+      - '/ash'
+      - '/dash'
+      - '/zsh'
+      - '/ksh'
+      - '/csh'
+      - '/tcsh'
+      - '/fish'
+      - '/busybox'
+  # Also catch a shell passed as an argument (e.g. `runc … /bin/sh`, `bash -c
+  # /bin/bash`) where the launching binary is something else.
+  shell_arg:
     process.cmd_line|contains:
       - '/bin/sh'
       - '/bin/bash'
       - '/bin/ash'
       - '/bin/dash'
       - '/bin/zsh'
-      - '/usr/bin/sh'
-      - '/usr/bin/bash'
-  condition: selection_class and selection_shell
+  condition: selection_class and (shell_bin or shell_arg)
 falsepositives:
   - Init containers running shell-based bootstrap scripts
   - Debug containers (kubectl debug, ephemeral containers)
