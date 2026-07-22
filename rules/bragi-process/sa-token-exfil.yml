@@ -23,9 +23,9 @@ detection:
   selection:
     class_uid: 1007
   token:
-    process.cmd_line.keyword|contains: /var/run/secrets/kubernetes.io/serviceaccount
+    process.cmd_line|contains: /var/run/secrets/kubernetes.io/serviceaccount
   tool:
-    process.cmd_line.keyword|contains:
+    process.cmd_line|contains:
     - curl
     - wget
     - 'nc '

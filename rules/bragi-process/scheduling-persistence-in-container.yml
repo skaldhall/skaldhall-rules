@@ -20,11 +20,11 @@ detection:
   selection:
     class_uid: 1007
   bins:
-    process.file.path.keyword|endswith:
+    process.file.path|endswith:
     - /crontab
     - /at
   cmd:
-    process.cmd_line.keyword|contains:
+    process.cmd_line|contains:
     - systemctl enable
     - crontab -
   condition: selection and (bins or cmd)

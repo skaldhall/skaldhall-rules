@@ -19,7 +19,7 @@ detection:
   selection:
     class_uid: 1007
   patterns:
-    process.cmd_line.keyword|contains:
+    process.cmd_line|contains:
       - /dev/tcp/
       - /dev/udp/
       - 'nc -e'

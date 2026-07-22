@@ -25,7 +25,7 @@ detection:
   res:
     resource.type: pods
   sub:
-    http_request.url.path.keyword|endswith: /ephemeralcontainers
+    http_request.url.path|endswith: /ephemeralcontainers
   condition: selection and res and sub
 falsepositives:
 - Legitimate live debugging by operators — whitelist by actor.user.name

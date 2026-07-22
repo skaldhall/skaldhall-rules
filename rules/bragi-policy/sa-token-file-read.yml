@@ -22,7 +22,7 @@ detection:
   selection:
     class_uid: 1001
   path:
-    file.path.keyword|contains: /var/run/secrets/kubernetes.io/serviceaccount
+    file.path|contains: /var/run/secrets/kubernetes.io/serviceaccount
   condition: selection and path
 falsepositives:
 - The application itself reading its token is normal — whitelist by workload if noisy

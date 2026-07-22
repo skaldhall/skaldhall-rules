@@ -23,9 +23,9 @@ detection:
   selection:
     class_uid: 6003
   path:
-    http_request.url.path.keyword|contains: /certificatesigningrequests/
+    http_request.url.path|contains: /certificatesigningrequests/
   approve:
-    http_request.url.path.keyword|endswith: /approval
+    http_request.url.path|endswith: /approval
   condition: selection and path and approve
 falsepositives:
 - kube-controller-manager auto-approving kubelet CSRs (system:* principal) — whitelist by actor

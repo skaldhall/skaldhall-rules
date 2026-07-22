@@ -16,16 +16,20 @@ logsource:
 detection:
   selection_class:
     class_uid: 1007
+  # Match process.file.path (the binary path the Tetragon VRL actually emits) by
+  # basename. process.name is NOT emitted by the pipeline — a query on it is
+  # unmapped, and an unmapped-field query aborts the WHOLE doc-level monitor's
+  # query-index build, silently killing every process rule in the detector.
   selection_recon:
-    process.name.keyword|contains:
-      - 'whoami'
-      - 'hostname'
-      - 'uname'
-      - 'ifconfig'
-      - 'netstat'
-      - 'arp'
-      - 'lsof'
-      - 'ps'
+    process.file.path|endswith:
+      - '/whoami'
+      - '/hostname'
+      - '/uname'
+      - '/ifconfig'
+      - '/netstat'
+      - '/arp'
+      - '/lsof'
+      - '/ps'
   condition: selection_class and selection_recon
 falsepositives:
   - Health-check sidecars

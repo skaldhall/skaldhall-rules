@@ -20,7 +20,7 @@ detection:
   selection:
     class_uid: 1007
   cmd:
-    process.cmd_line.keyword|contains:
+    process.cmd_line|contains:
     - .bash_history
     - history -c
     - unset HISTFILE

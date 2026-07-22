@@ -23,7 +23,7 @@ detection:
     class_uid: 1001
     activity_id: 3
   path:
-    file.path.keyword|contains:
+    file.path|contains:
     - /etc/ld.so.preload
     - authorized_keys
     - /etc/systemd/

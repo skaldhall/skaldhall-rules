@@ -15,7 +15,7 @@ detection:
   selection_class:
     class_uid: 4002
   selection_path:
-    http_request.url.path.keyword|contains:
+    http_request.url.path|contains:
       - '../'
       - '..\\'
       - '%2e%2e'

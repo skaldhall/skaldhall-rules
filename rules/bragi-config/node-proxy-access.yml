@@ -25,7 +25,7 @@ detection:
   res:
     resource.type: nodes
   proxy:
-    http_request.url.path.keyword|contains: /proxy
+    http_request.url.path|contains: /proxy
   condition: selection and res and proxy
 falsepositives:
 - Monitoring that scrapes kubelet through the API proxy — whitelist by actor.user.name

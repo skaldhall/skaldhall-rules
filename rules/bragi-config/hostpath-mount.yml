@@ -23,7 +23,7 @@ detection:
     class_uid: 6003
     api.resource.type: pods
   anyhostpath:
-    summary.host_path_mounts.keyword|contains: /
+    summary.host_path_mounts|contains: /
   condition: base and anyhostpath
 falsepositives:
 - Log collectors (/var/log), CNI and CSI DaemonSets — whitelist by workload

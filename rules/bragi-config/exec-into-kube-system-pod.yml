@@ -27,7 +27,7 @@ detection:
   ns:
     resource.namespace: kube-system
   action:
-    http_request.url.path.keyword|contains:
+    http_request.url.path|contains:
     - /exec
     - /attach
   condition: selection and res and ns and action
