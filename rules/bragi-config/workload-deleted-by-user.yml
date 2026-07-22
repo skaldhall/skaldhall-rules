@@ -1,0 +1,36 @@
+title: Workload controller deleted by a user
+id: a1ca9ff5-867b-596a-b273-c49f3d26b6cf
+status: experimental
+description: 'Deleting a Deployment/StatefulSet/DaemonSet/ReplicaSet tears down a running
+
+  service. CD tooling does this as system accounts; a direct human/workload delete
+
+  may be disruption.
+
+  '
+references:
+- https://microsoft.github.io/Threat-Matrix-for-Kubernetes/
+- https://tetragon.io/docs/policy-library/
+author: skaldhall
+date: 2026/07/21
+tags:
+- attack.impact
+- attack.t1489
+logsource:
+  product: kubernetes
+detection:
+  selection:
+    class_uid: 6003
+    activity_id: 4
+  res:
+    resource.type:
+    - deployments
+    - statefulsets
+    - daemonsets
+    - replicasets
+  exclusion:
+    actor.user.name|startswith: 'system:'
+  condition: selection and res and not exclusion
+falsepositives:
+- GitOps/CD controllers and administrators doing planned removals — whitelist by actor
+level: medium

@@ -1,0 +1,29 @@
+title: Service-account token file read
+id: cd61824b-a5c0-5f17-8aa7-21ff79c54215
+status: experimental
+description: 'A read of the projected service-account token file. Combined with the process
+
+  that read it (a shell or network tool rather than the app), this is runtime
+
+  credential theft. Requires a file-integrity TracingPolicy (class 1001).
+
+  '
+references:
+- https://microsoft.github.io/Threat-Matrix-for-Kubernetes/
+- https://tetragon.io/docs/policy-library/
+author: skaldhall
+date: 2026/07/21
+tags:
+- attack.credential_access
+- attack.t1552.007
+logsource:
+  product: linux
+detection:
+  selection:
+    class_uid: 1001
+  path:
+    file.path.keyword|contains: /var/run/secrets/kubernetes.io/serviceaccount
+  condition: selection and path
+falsepositives:
+- The application itself reading its token is normal — whitelist by workload if noisy
+level: critical

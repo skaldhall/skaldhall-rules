@@ -1,0 +1,33 @@
+title: Scheduling-persistence tool run in container
+id: 40261493-d192-576c-831d-f94c3a83e73d
+status: experimental
+description: 'crontab/at or ''systemctl enable'' inside a container installs a persistence hook
+
+  that survives process exit. Uncommon in containerized workloads.
+
+  '
+references:
+- https://microsoft.github.io/Threat-Matrix-for-Kubernetes/
+- https://tetragon.io/docs/policy-library/
+author: skaldhall
+date: 2026/07/21
+tags:
+- attack.persistence
+- attack.t1053
+logsource:
+  product: linux
+detection:
+  selection:
+    class_uid: 1007
+  bins:
+    process.file.path.keyword|endswith:
+    - /crontab
+    - /at
+  cmd:
+    process.cmd_line.keyword|contains:
+    - systemctl enable
+    - crontab -
+  condition: selection and (bins or cmd)
+falsepositives:
+- Legacy images that use cron internally — whitelist by workload
+level: medium

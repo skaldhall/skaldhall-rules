@@ -1,0 +1,30 @@
+title: Anonymous API request denied
+id: 83cb0ea9-cfa5-5e50-97f1-7a9cf82b9498
+status: experimental
+description: 'A denied anonymous request is usually external scanning probing the API server.
+
+  Individually benign, but a spike is reconnaissance.
+
+  '
+references:
+- https://microsoft.github.io/Threat-Matrix-for-Kubernetes/
+- https://tetragon.io/docs/policy-library/
+author: skaldhall
+date: 2026/07/21
+tags:
+- attack.discovery
+- attack.t1087
+logsource:
+  product: kubernetes
+detection:
+  selection:
+    class_uid: 6003
+    actor.user.name: system:anonymous
+  denied:
+    http_response.status_code:
+    - 401
+    - 403
+  condition: selection and denied
+falsepositives:
+- Health-check probes hitting authenticated endpoints — expected at low volume
+level: medium

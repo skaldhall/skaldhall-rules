@@ -1,0 +1,31 @@
+title: API request used impersonation
+id: e243e58d-ec32-51ec-913c-a795ef8072ff
+status: experimental
+description: 'The Impersonate-User/Group headers (kubectl --as) let a principal act as another
+
+  identity — legitimate for break-glass admin, but a common privilege-escalation
+
+  and audit-evasion move. Requires the audit source to map impersonatedUser (bragi
+
+  audit VRL maps it to actor.impersonated_user).
+
+  '
+references:
+- https://microsoft.github.io/Threat-Matrix-for-Kubernetes/
+- https://tetragon.io/docs/policy-library/
+author: skaldhall
+date: 2026/07/21
+tags:
+- attack.privilege_escalation
+- attack.t1078
+logsource:
+  product: kubernetes
+detection:
+  selection:
+    class_uid: 6003
+  imp:
+    actor.impersonated_user: '*'
+  condition: selection and imp
+falsepositives:
+- Break-glass administration and some CI flows — whitelist by actor.user.name
+level: high

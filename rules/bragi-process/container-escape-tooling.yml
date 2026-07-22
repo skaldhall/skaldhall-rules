@@ -17,7 +17,7 @@ logsource:
 detection:
   selection:
     class_uid: 1007
-    process.file.path|endswith:
+    process.file.path.keyword|endswith:
       - /nsenter
       - /unshare
       - /setns

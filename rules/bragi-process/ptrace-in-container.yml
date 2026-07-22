@@ -1,0 +1,32 @@
+title: Ptrace from a container
+id: 53792912-4610-59db-af07-f2dc68c1274c
+status: experimental
+description: 'ptrace attaches to and reads another process''s memory — used for code injection
+
+  and in-memory credential theft. Rare in production containers. Requires an
+
+  escape-syscall TracingPolicy (class 1007).
+
+  '
+references:
+- https://microsoft.github.io/Threat-Matrix-for-Kubernetes/
+- https://tetragon.io/docs/policy-library/
+author: skaldhall
+date: 2026/07/21
+tags:
+- attack.credential_access
+- attack.privilege_escalation
+- attack.t1055
+logsource:
+  product: linux
+detection:
+  selection:
+    class_uid: 1007
+  fn:
+    function_name|contains: ptrace
+  ns:
+    k8s.namespace: '*'
+  condition: selection and fn and ns
+falsepositives:
+- Debuggers/profilers (gdb, strace, APM agents) — whitelist by workload
+level: high

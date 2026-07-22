@@ -1,0 +1,31 @@
+title: Binding grants the system:masters group
+id: f8c1659b-09d7-5882-9723-28f75d6b1246
+status: experimental
+description: 'system:masters bypasses RBAC entirely and cannot be revoked through RBAC — it is
+
+  hardwired superuser in the API server. Binding a subject to it is a full cluster
+
+  takeover, worse than cluster-admin.
+
+  '
+references:
+- https://microsoft.github.io/Threat-Matrix-for-Kubernetes/
+- https://tetragon.io/docs/policy-library/
+author: skaldhall
+date: 2026/07/21
+tags:
+- attack.privilege_escalation
+- attack.t1078
+logsource:
+  product: kubernetes
+detection:
+  base:
+    class_uid: 6003
+  subj_watch:
+    summary.subjects.name: system:masters
+  subj_audit:
+    request_object.subjects.name: system:masters
+  condition: base and (subj_watch or subj_audit)
+falsepositives:
+- Essentially never legitimate post-install — investigate every hit
+level: critical

@@ -1,0 +1,38 @@
+title: Service-account token piped to a network tool
+id: 1b5ebf92-6fbf-5f3c-b10b-2c8241dd8cdd
+status: experimental
+description: 'A command line that both references the service-account token path AND invokes a
+
+  network/transfer tool is active credential exfiltration from inside a pod, not
+
+  incidental access.
+
+  '
+references:
+- https://microsoft.github.io/Threat-Matrix-for-Kubernetes/
+- https://tetragon.io/docs/policy-library/
+author: skaldhall
+date: 2026/07/21
+tags:
+- attack.credential_access
+- attack.exfiltration
+- attack.t1552.007
+logsource:
+  product: linux
+detection:
+  selection:
+    class_uid: 1007
+  token:
+    process.cmd_line.keyword|contains: /var/run/secrets/kubernetes.io/serviceaccount
+  tool:
+    process.cmd_line.keyword|contains:
+    - curl
+    - wget
+    - 'nc '
+    - ncat
+    - socat
+    - base64
+  condition: selection and token and tool
+falsepositives:
+- A sidecar that legitimately forwards its token — whitelist by workload
+level: critical

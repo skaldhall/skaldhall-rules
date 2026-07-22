@@ -1,0 +1,33 @@
+title: Mount syscall from a container
+id: c289933d-ca68-5fa6-a7a7-9ab879cdb7d5
+status: experimental
+description: 'A mount/umount from inside a container is a common container-escape step
+
+  (remounting host paths, /proc tricks). Requires an escape-syscall TracingPolicy
+
+  named 1007-* so mount events route to process activity.
+
+  '
+references:
+- https://microsoft.github.io/Threat-Matrix-for-Kubernetes/
+- https://tetragon.io/docs/policy-library/
+author: skaldhall
+date: 2026/07/21
+tags:
+- attack.privilege_escalation
+- attack.t1611
+logsource:
+  product: linux
+detection:
+  selection:
+    class_uid: 1007
+  fn:
+    function_name|contains:
+    - mount
+    - umount
+  ns:
+    k8s.namespace: '*'
+  condition: selection and fn and ns
+falsepositives:
+- CSI drivers and volume tooling that mount inside a pod — whitelist by workload
+level: high

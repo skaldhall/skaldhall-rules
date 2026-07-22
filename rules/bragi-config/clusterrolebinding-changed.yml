@@ -1,0 +1,36 @@
+title: ClusterRoleBinding created, changed or deleted
+id: c861a999-efdf-5987-b785-64cf827a5023
+status: experimental
+description: 'Cluster-wide RBAC grants are high-value. cluster-admin and system:masters have
+
+  their own high/critical rules; this catches every other CRB change so an
+
+  unexpected grant surfaces.
+
+  '
+references:
+- https://microsoft.github.io/Threat-Matrix-for-Kubernetes/
+- https://tetragon.io/docs/policy-library/
+author: skaldhall
+date: 2026/07/21
+tags:
+- attack.privilege_escalation
+- attack.t1078
+logsource:
+  product: kubernetes
+detection:
+  base:
+    class_uid: 6003
+  verbs:
+    activity_id:
+    - 1
+    - 3
+    - 4
+  res_watch:
+    api.resource.type: clusterrolebindings
+  res_audit:
+    resource.type: clusterrolebindings
+  condition: base and verbs and (res_watch or res_audit)
+falsepositives:
+- GitOps/CD controllers that manage RBAC — whitelist by actor.user.name
+level: medium

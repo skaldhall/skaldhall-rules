@@ -1,0 +1,32 @@
+title: eBPF operation from a container
+id: 103a0cc3-a97a-5f4f-a89c-a70a0cbc1e89
+status: experimental
+description: 'Loading eBPF from inside a container is a rootkit-class primitive (kernel-level
+
+  hiding, network interception). Host-level bpf noise stays low via the general
+
+  eBPF rule; container context is high. Requires an eBPF TracingPolicy (class
+
+  1003).
+
+  '
+references:
+- https://microsoft.github.io/Threat-Matrix-for-Kubernetes/
+- https://tetragon.io/docs/policy-library/
+author: skaldhall
+date: 2026/07/21
+tags:
+- attack.defense_evasion
+- attack.persistence
+- attack.t1547.006
+logsource:
+  product: linux
+detection:
+  selection:
+    class_uid: 1003
+  ns:
+    k8s.namespace: '*'
+  condition: selection and ns
+falsepositives:
+- Cilium/Tetragon/Pixie and other eBPF agents — whitelist by workload
+level: high

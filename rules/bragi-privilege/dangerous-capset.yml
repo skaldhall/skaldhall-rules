@@ -1,0 +1,29 @@
+title: Runtime capability set acquired
+id: 165750cf-79cb-523a-9434-6c0df04e701e
+status: experimental
+description: 'A capset() at runtime means a process is raising its Linux capabilities after
+
+  start — distinct from the pod spec''s declared caps (which the k8s rule covers).
+
+  Requires a privilege TracingPolicy (class 3001).
+
+  '
+references:
+- https://microsoft.github.io/Threat-Matrix-for-Kubernetes/
+- https://tetragon.io/docs/policy-library/
+author: skaldhall
+date: 2026/07/21
+tags:
+- attack.privilege_escalation
+- attack.t1548
+logsource:
+  product: linux
+detection:
+  selection:
+    class_uid: 3001
+  fn:
+    function_name|contains: capset
+  condition: selection and fn
+falsepositives:
+- Runtimes that legitimately drop-then-set caps at start (some CNIs) — whitelist by workload
+level: high

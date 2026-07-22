@@ -1,0 +1,37 @@
+title: Write to a persistence-sensitive file
+id: 963d4a27-02b3-538d-9776-3805976177cf
+status: experimental
+description: 'Writing to ld.so.preload, authorized_keys, systemd units, cron dirs or rc.local
+
+  establishes persistence or code-injection on the node/container. Requires a
+
+  file-integrity TracingPolicy (class 1001).
+
+  '
+references:
+- https://microsoft.github.io/Threat-Matrix-for-Kubernetes/
+- https://tetragon.io/docs/policy-library/
+author: skaldhall
+date: 2026/07/21
+tags:
+- attack.persistence
+- attack.t1547
+logsource:
+  product: linux
+detection:
+  selection:
+    class_uid: 1001
+    activity_id: 3
+  path:
+    file.path.keyword|contains:
+    - /etc/ld.so.preload
+    - authorized_keys
+    - /etc/systemd/
+    - /etc/cron
+    - /var/spool/cron
+    - /etc/rc.local
+    - /root/.ssh/
+  condition: selection and path
+falsepositives:
+- Configuration management writing these on purpose — whitelist by workload
+level: critical

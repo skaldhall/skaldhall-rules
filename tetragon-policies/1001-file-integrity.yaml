@@ -1,0 +1,43 @@
+# Bragi TracingPolicy — file integrity (OCSF class 1001)
+#
+# The policy NAME begins with "1001-" so bragi's Tetragon parser routes every
+# event it produces to OCSF class 1001 (file activity), regardless of which
+# kernel function was hooked. That is what makes the bragi-policy Sigma rules
+# (sa-token-file-read, persistence-file-write) have data to match.
+#
+# Hooks security_file_permission (every file open/read) and the write/unlink
+# syscalls, filtered to the sensitive paths the rules care about so volume stays
+# manageable. Tune the matchArgs prefixes to your workloads.
+apiVersion: cilium.io/v1alpha1
+kind: TracingPolicy
+metadata:
+  name: 1001-file-integrity
+spec:
+  kprobes:
+    - call: security_file_permission
+      syscall: false
+      args:
+        - index: 0
+          type: file
+        - index: 1
+          type: int
+      selectors:
+        - matchArgs:
+            - index: 0
+              operator: Prefix
+              values:
+                - /var/run/secrets/kubernetes.io/serviceaccount
+                - /etc/ld.so.preload
+                - /etc/systemd/
+                - /etc/cron
+                - /var/spool/cron
+                - /etc/rc.local
+                - /root/.ssh/
+                - /home
+    - call: security_inode_unlink
+      syscall: false
+      args:
+        - index: 0
+          type: nop
+        - index: 1
+          type: dentry

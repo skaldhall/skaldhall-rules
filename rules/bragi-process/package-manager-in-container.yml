@@ -1,0 +1,41 @@
+title: Package manager or build tool executed in container
+id: 79033660-3625-5b79-8a62-4cf788721751
+status: experimental
+description: 'A running production container should not install packages or compile code.
+
+  apt/apk/yum/pip/npm/gcc/make at runtime means someone is staging tools inside
+
+  the container.
+
+  '
+references:
+- https://microsoft.github.io/Threat-Matrix-for-Kubernetes/
+- https://tetragon.io/docs/policy-library/
+author: skaldhall
+date: 2026/07/21
+tags:
+- attack.execution
+- attack.t1072
+logsource:
+  product: linux
+detection:
+  selection:
+    class_uid: 1007
+  tools:
+    process.file.path.keyword|endswith:
+    - /apt
+    - /apt-get
+    - /apk
+    - /yum
+    - /dnf
+    - /pip
+    - /pip3
+    - /npm
+    - /gcc
+    - /cc
+    - /make
+    - /go
+  condition: selection and tools
+falsepositives:
+- CI/build pods that legitimately run these — whitelist by workload
+level: high

@@ -1,0 +1,30 @@
+title: Pod mounts a host path
+id: 013f6532-82dc-5a2f-9822-3f1cf9581d37
+status: experimental
+description: 'Any hostPath mount pierces the container boundary. Sensitive paths get their own
+
+  critical rule; this flags every other hostPath so an unexpected one surfaces.
+
+  ''/'' matches any path because every absolute path contains it.
+
+  '
+references:
+- https://microsoft.github.io/Threat-Matrix-for-Kubernetes/
+- https://tetragon.io/docs/policy-library/
+author: skaldhall
+date: 2026/07/21
+tags:
+- attack.persistence
+- attack.t1610
+logsource:
+  product: kubernetes
+detection:
+  base:
+    class_uid: 6003
+    api.resource.type: pods
+  anyhostpath:
+    summary.host_path_mounts.keyword|contains: /
+  condition: base and anyhostpath
+falsepositives:
+- Log collectors (/var/log), CNI and CSI DaemonSets — whitelist by workload
+level: high

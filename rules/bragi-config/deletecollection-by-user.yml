@@ -1,0 +1,30 @@
+title: Bulk delete (deletecollection) by a user
+id: 6dc80dfa-fa28-501b-a889-3d4a5cc7120f
+status: experimental
+description: 'deletecollection removes every object of a kind in one call — a fast destruction
+
+  primitive. Controllers use it as system accounts and are excluded; a human or
+
+  workload identity doing it is mass deletion.
+
+  '
+references:
+- https://microsoft.github.io/Threat-Matrix-for-Kubernetes/
+- https://tetragon.io/docs/policy-library/
+author: skaldhall
+date: 2026/07/21
+tags:
+- attack.impact
+- attack.t1485
+logsource:
+  product: kubernetes
+detection:
+  selection:
+    class_uid: 6003
+    api.operation: deletecollection
+  exclusion:
+    actor.user.name|startswith: 'system:'
+  condition: selection and not exclusion
+falsepositives:
+- Namespace teardown scripts run by an administrator — whitelist by actor.user.name
+level: high

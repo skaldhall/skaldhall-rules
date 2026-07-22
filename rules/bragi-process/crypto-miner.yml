@@ -16,13 +16,13 @@ logsource:
   product: tetragon
 detection:
   binaries:
-    process.file.path|endswith:
+    process.file.path.keyword|endswith:
       - /xmrig
       - /minerd
       - /cpuminer
       - /ethminer
   args:
-    process.cmd_line|contains:
+    process.cmd_line.keyword|contains:
       - 'stratum+tcp://'
       - '--donate-level'
   selection:

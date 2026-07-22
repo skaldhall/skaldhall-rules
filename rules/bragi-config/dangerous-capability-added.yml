@@ -1,0 +1,42 @@
+title: Pod adds a dangerous Linux capability
+id: 0a48c213-7ab6-5b66-9181-35a17e9cb2c6
+status: experimental
+description: 'Each of these capabilities is a route to host compromise: SYS_ADMIN (mount,
+
+  near-root), SYS_PTRACE (inspect host processes), SYS_MODULE (load kernel code),
+
+  NET_ADMIN/BPF (network + eBPF control), SYS_RAWIO/SYS_BOOT, DAC_READ_SEARCH.
+
+  '
+references:
+- https://microsoft.github.io/Threat-Matrix-for-Kubernetes/
+- https://tetragon.io/docs/policy-library/
+author: skaldhall
+date: 2026/07/21
+tags:
+- attack.privilege_escalation
+- attack.t1548
+logsource:
+  product: kubernetes
+detection:
+  base:
+    class_uid: 6003
+    api.resource.type: pods
+  verbs:
+    activity_id:
+    - 1
+    - 3
+  caps:
+    summary.added_capabilities|contains:
+    - SYS_ADMIN
+    - SYS_PTRACE
+    - SYS_MODULE
+    - SYS_RAWIO
+    - SYS_BOOT
+    - NET_ADMIN
+    - BPF
+    - DAC_READ_SEARCH
+  condition: base and verbs and caps
+falsepositives:
+- Tetragon/Cilium and other eBPF agents that need these — whitelist by workload
+level: high

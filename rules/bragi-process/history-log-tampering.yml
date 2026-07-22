@@ -1,0 +1,32 @@
+title: Shell history or log tampering in container
+id: ff05d5fe-6bcc-5685-8462-291923dd229f
+status: experimental
+description: 'Clearing shell history or truncating logs is anti-forensics run after hands-on
+
+  activity in a container.
+
+  '
+references:
+- https://microsoft.github.io/Threat-Matrix-for-Kubernetes/
+- https://tetragon.io/docs/policy-library/
+author: skaldhall
+date: 2026/07/21
+tags:
+- attack.defense_evasion
+- attack.t1070.003
+logsource:
+  product: linux
+detection:
+  selection:
+    class_uid: 1007
+  cmd:
+    process.cmd_line.keyword|contains:
+    - .bash_history
+    - history -c
+    - unset HISTFILE
+    - truncate -s 0 /var/log
+    - rm -rf /var/log
+  condition: selection and cmd
+falsepositives:
+- Log-rotation jobs run by the logging workload — whitelist by workload
+level: medium

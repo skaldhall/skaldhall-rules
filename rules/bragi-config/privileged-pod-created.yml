@@ -1,0 +1,34 @@
+title: Privileged pod created or modified
+id: a9ed2975-e81e-5c83-926d-2940782a456f
+status: experimental
+description: 'A pod requesting privileged: true has full host access — a one-step container
+
+  escape. In a hardened cluster only CNI/CSI/node agents need this; whitelist
+
+  those and treat everything else as an attacker or misconfiguration.
+
+  '
+references:
+- https://microsoft.github.io/Threat-Matrix-for-Kubernetes/
+- https://tetragon.io/docs/policy-library/
+author: skaldhall
+date: 2026/07/21
+tags:
+- attack.privilege_escalation
+- attack.t1610
+logsource:
+  product: kubernetes
+detection:
+  base:
+    class_uid: 6003
+    api.resource.type: pods
+  verbs:
+    activity_id:
+    - 1
+    - 3
+  priv:
+    summary.privileged: true
+  condition: base and verbs and priv
+falsepositives:
+- CNI/CSI/node-agent DaemonSets that need host access — whitelist by workload
+level: critical

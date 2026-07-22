@@ -1,0 +1,18 @@
+# Bragi TracingPolicy — kernel module load/unload (OCSF class 1005)
+# Feeds kernel-module-load-container. A container loading a module = node takeover.
+apiVersion: cilium.io/v1alpha1
+kind: TracingPolicy
+metadata:
+  name: 1005-kernel-modules
+spec:
+  kprobes:
+    - call: __x64_sys_init_module
+      syscall: true
+      args: [{index: 0, type: nop}]
+    - call: __x64_sys_finit_module
+      syscall: true
+      args: [{index: 0, type: int}]
+    - call: __x64_sys_delete_module
+      syscall: true
+      args: [{index: 0, type: string}]
+# arm64: __arm64_sys_*.

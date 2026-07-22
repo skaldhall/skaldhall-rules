@@ -1,0 +1,40 @@
+title: Network client executed in container
+id: c450f441-7f26-525e-ba6b-16fee3b5c151
+status: experimental
+description: 'curl/wget/nc/socat/ssh/scp/nmap in a running container are the usual tools for
+
+  pulling a second stage, exfiltrating data, or moving laterally. Many workloads
+
+  ship them legitimately, so this is medium and whitelisted per workload.
+
+  '
+references:
+- https://microsoft.github.io/Threat-Matrix-for-Kubernetes/
+- https://tetragon.io/docs/policy-library/
+author: skaldhall
+date: 2026/07/21
+tags:
+- attack.command_and_control
+- attack.exfiltration
+- attack.t1105
+logsource:
+  product: linux
+detection:
+  selection:
+    class_uid: 1007
+  tools:
+    process.file.path.keyword|endswith:
+    - /curl
+    - /wget
+    - /nc
+    - /ncat
+    - /netcat
+    - /socat
+    - /ssh
+    - /scp
+    - /nmap
+    - /telnet
+  condition: selection and tools
+falsepositives:
+- Workloads whose entrypoint legitimately uses an HTTP/transfer client — whitelist by workload
+level: medium

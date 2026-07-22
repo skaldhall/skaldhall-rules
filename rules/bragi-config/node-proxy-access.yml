@@ -1,0 +1,32 @@
+title: Kubelet API accessed via node proxy
+id: f3b77c1a-a90f-5d64-ad83-399bb16f70a9
+status: experimental
+description: 'The nodes/proxy subresource reaches the kubelet API directly, which can run
+
+  commands in containers WITHOUT generating pod exec audit events — an exec-
+
+  auditing bypass and a lateral-movement path.
+
+  '
+references:
+- https://microsoft.github.io/Threat-Matrix-for-Kubernetes/
+- https://tetragon.io/docs/policy-library/
+author: skaldhall
+date: 2026/07/21
+tags:
+- attack.execution
+- attack.defense_evasion
+- attack.t1609
+logsource:
+  product: kubernetes
+detection:
+  selection:
+    class_uid: 6003
+  res:
+    resource.type: nodes
+  proxy:
+    http_request.url.path.keyword|contains: /proxy
+  condition: selection and res and proxy
+falsepositives:
+- Monitoring that scrapes kubelet through the API proxy — whitelist by actor.user.name
+level: high

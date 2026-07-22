@@ -1,0 +1,36 @@
+title: kube-system ConfigMap changed by a user
+id: 34142522-17af-5a2a-9289-7ebb4bbdd886
+status: experimental
+description: 'Any ConfigMap write in kube-system by a non-system principal touches control-
+
+  plane configuration. System controllers are excluded.
+
+  '
+references:
+- https://microsoft.github.io/Threat-Matrix-for-Kubernetes/
+- https://tetragon.io/docs/policy-library/
+author: skaldhall
+date: 2026/07/21
+tags:
+- attack.defense_evasion
+- attack.t1556
+logsource:
+  product: kubernetes
+detection:
+  selection:
+    class_uid: 6003
+  verbs:
+    activity_id:
+    - 1
+    - 3
+    - 4
+  res:
+    resource.type: configmaps
+  ns:
+    resource.namespace: kube-system
+  exclusion:
+    actor.user.name|startswith: 'system:'
+  condition: selection and verbs and res and ns and not exclusion
+falsepositives:
+- Administrators legitimately reconfiguring kube-system — whitelist by actor.user.name
+level: high

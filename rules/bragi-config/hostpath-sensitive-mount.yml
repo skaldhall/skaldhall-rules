@@ -1,0 +1,43 @@
+title: Pod mounts a sensitive host path
+id: 8ad688c8-f120-5e46-aea0-876ea527b72d
+status: experimental
+description: 'A hostPath mount of a sensitive location (container-runtime socket, /etc, /proc,
+
+  kubelet dir, /root, /boot) is a direct escape or node-credential-theft
+
+  primitive. /var/log and similar benign paths are intentionally excluded so log
+
+  collectors are covered by the general hostPath rule, not this one.
+
+  '
+references:
+- https://microsoft.github.io/Threat-Matrix-for-Kubernetes/
+- https://tetragon.io/docs/policy-library/
+author: skaldhall
+date: 2026/07/21
+tags:
+- attack.privilege_escalation
+- attack.persistence
+- attack.t1610
+logsource:
+  product: kubernetes
+detection:
+  base:
+    class_uid: 6003
+    api.resource.type: pods
+  paths:
+    summary.host_path_mounts.keyword|contains:
+    - /var/run/docker.sock
+    - /var/run/containerd
+    - /run/containerd
+    - /run/crio
+    - /etc
+    - /proc
+    - /var/lib/kubelet
+    - /root
+    - /boot
+    - /var/run/secrets
+  condition: base and paths
+falsepositives:
+- A monitoring/backup agent that legitimately reads one of these — whitelist by workload
+level: critical

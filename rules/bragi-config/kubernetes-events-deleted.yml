@@ -1,0 +1,33 @@
+title: Kubernetes events deleted
+id: 537cebe9-d9c6-52e3-8dbf-a14d1cd31efe
+status: experimental
+description: 'Deleting Event objects erases the record of what happened in a namespace — anti-
+
+  forensics. Events normally expire on their own; explicit deletion is log
+
+  tampering.
+
+  '
+references:
+- https://microsoft.github.io/Threat-Matrix-for-Kubernetes/
+- https://tetragon.io/docs/policy-library/
+author: skaldhall
+date: 2026/07/21
+tags:
+- attack.defense_evasion
+- attack.t1070
+logsource:
+  product: kubernetes
+detection:
+  base:
+    class_uid: 6003
+  verbs:
+    activity_id: 4
+  res_watch:
+    api.resource.type: events
+  res_audit:
+    resource.type: events
+  condition: base and verbs and (res_watch or res_audit)
+falsepositives:
+- Rare cleanup jobs — whitelist by actor.user.name
+level: high

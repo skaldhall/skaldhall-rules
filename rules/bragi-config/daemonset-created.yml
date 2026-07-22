@@ -1,0 +1,34 @@
+title: DaemonSet created
+id: 6099ac5f-0144-50a0-85a2-73b49ff40823
+status: experimental
+description: 'A DaemonSet runs a pod on EVERY node, including future ones — an efficient way
+
+  to deploy a backdoor or miner cluster-wide and to persist. New DaemonSets should
+
+  be rare and reviewed.
+
+  '
+references:
+- https://microsoft.github.io/Threat-Matrix-for-Kubernetes/
+- https://tetragon.io/docs/policy-library/
+author: skaldhall
+date: 2026/07/21
+tags:
+- attack.persistence
+- attack.lateral_movement
+- attack.t1610
+logsource:
+  product: kubernetes
+detection:
+  base:
+    class_uid: 6003
+  verbs:
+    activity_id: 1
+  res_watch:
+    api.resource.type: daemonsets
+  res_audit:
+    resource.type: daemonsets
+  condition: base and verbs and (res_watch or res_audit)
+falsepositives:
+- Installing a legitimate node-level agent (logging, CNI) — whitelist by actor.user.name
+level: high

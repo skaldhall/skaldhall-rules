@@ -1,0 +1,43 @@
+title: Pod uses an image from a public registry
+id: 2b9bf2c8-262d-5be3-828a-38c5a6805815
+status: experimental
+description: 'In an air-gapped or supply-chain-controlled cluster all images should come from
+
+  the internal registry. An explicit public-registry reference is unvetted. Bare
+
+  names (implicit docker.io) are NOT caught — enforce an internal-registry naming
+
+  convention to close that gap.
+
+  '
+references:
+- https://microsoft.github.io/Threat-Matrix-for-Kubernetes/
+- https://tetragon.io/docs/policy-library/
+author: skaldhall
+date: 2026/07/21
+tags:
+- attack.initial_access
+- attack.t1525
+logsource:
+  product: kubernetes
+detection:
+  base:
+    class_uid: 6003
+    api.resource.type: pods
+  verbs:
+    activity_id:
+    - 1
+    - 3
+  pub:
+    summary.images.keyword|contains:
+    - docker.io/
+    - index.docker.io
+    - ghcr.io/
+    - quay.io/
+    - gcr.io/
+    - public.ecr.aws
+    - registry.k8s.io
+  condition: base and verbs and pub
+falsepositives:
+- Clusters that intentionally pull from public registries — whitelist or disable this rule
+level: medium

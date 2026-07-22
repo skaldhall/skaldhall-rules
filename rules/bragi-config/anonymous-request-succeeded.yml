@@ -1,0 +1,34 @@
+title: Anonymous API request succeeded
+id: 060a5784-6884-57c3-8b29-9064d73c97c6
+status: experimental
+description: 'system:anonymous should never successfully do anything on a hardened API server.
+
+  A 2xx response to an anonymous request means unauthenticated access is possible
+
+  — an immediate, critical misconfiguration.
+
+  '
+references:
+- https://microsoft.github.io/Threat-Matrix-for-Kubernetes/
+- https://tetragon.io/docs/policy-library/
+author: skaldhall
+date: 2026/07/21
+tags:
+- attack.initial_access
+- attack.t1078.001
+logsource:
+  product: kubernetes
+detection:
+  selection:
+    class_uid: 6003
+    actor.user.name: system:anonymous
+  success:
+    http_response.status_code:
+    - 200
+    - 201
+    - 202
+    - 204
+  condition: selection and success
+falsepositives:
+- A deliberately public health/readyz endpoint — whitelist by http_request.url.path
+level: critical

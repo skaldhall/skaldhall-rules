@@ -1,0 +1,36 @@
+title: Pod shares a host namespace
+id: 15d5717b-6ff3-50a1-9194-4df21e69f417
+status: experimental
+description: 'hostNetwork, hostPID or hostIPC place the pod in the node''s namespaces: it can
+
+  see host processes, sniff node traffic, or signal other pods. Only node agents
+
+  legitimately need this.
+
+  '
+references:
+- https://microsoft.github.io/Threat-Matrix-for-Kubernetes/
+- https://tetragon.io/docs/policy-library/
+author: skaldhall
+date: 2026/07/21
+tags:
+- attack.privilege_escalation
+- attack.t1611
+logsource:
+  product: kubernetes
+detection:
+  base:
+    class_uid: 6003
+    api.resource.type: pods
+  verbs:
+    activity_id:
+    - 1
+    - 3
+  hostns:
+  - summary.host_network: true
+  - summary.host_pid: true
+  - summary.host_ipc: true
+  condition: base and verbs and 1 of hostns
+falsepositives:
+- CNI and node-agent DaemonSets — whitelist by workload
+level: high

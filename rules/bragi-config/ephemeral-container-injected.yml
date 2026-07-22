@@ -1,0 +1,32 @@
+title: Ephemeral (debug) container injected into a pod
+id: 48965c83-f7d9-51bc-9337-20a8e186af9a
+status: experimental
+description: 'kubectl debug attaches an ephemeral container to a running pod — a modern way to
+
+  get code execution in a target pod that can bypass exec monitoring. Rare in
+
+  normal operations.
+
+  '
+references:
+- https://microsoft.github.io/Threat-Matrix-for-Kubernetes/
+- https://tetragon.io/docs/policy-library/
+author: skaldhall
+date: 2026/07/21
+tags:
+- attack.execution
+- attack.defense_evasion
+- attack.t1610
+logsource:
+  product: kubernetes
+detection:
+  selection:
+    class_uid: 6003
+  res:
+    resource.type: pods
+  sub:
+    http_request.url.path.keyword|endswith: /ephemeralcontainers
+  condition: selection and res and sub
+falsepositives:
+- Legitimate live debugging by operators — whitelist by actor.user.name
+level: high

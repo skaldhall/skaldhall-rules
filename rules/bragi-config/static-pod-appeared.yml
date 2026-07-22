@@ -1,0 +1,32 @@
+title: Static pod appeared
+id: fd35a47c-1007-579f-9cea-60e260ee1834
+status: experimental
+description: 'A pod owned by a Node (not a controller) is a static pod: defined by a manifest
+
+  file on the node''s disk, outside API-server control, and it restarts even if
+
+  deleted through the API. A classic persistence mechanism.
+
+  '
+references:
+- https://microsoft.github.io/Threat-Matrix-for-Kubernetes/
+- https://tetragon.io/docs/policy-library/
+author: skaldhall
+date: 2026/07/21
+tags:
+- attack.persistence
+- attack.t1543
+logsource:
+  product: kubernetes
+detection:
+  base:
+    class_uid: 6003
+    api.resource.type: pods
+  verbs:
+    activity_id: 1
+  static:
+    summary.owner.kind: Node
+  condition: base and verbs and static
+falsepositives:
+- Legitimate control-plane static pods (kube-apiserver, etcd) — whitelist by node/name
+level: high

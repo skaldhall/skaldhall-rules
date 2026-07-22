@@ -1,0 +1,31 @@
+title: CustomResourceDefinition created
+id: 0b3a24ed-0408-5812-8f0c-103151af14ef
+status: experimental
+description: 'A new CRD adds API surface and usually a controller that acts on it. Benign
+
+  during installs, but an unexpected CRD can be an attacker''s control channel.
+
+  '
+references:
+- https://microsoft.github.io/Threat-Matrix-for-Kubernetes/
+- https://tetragon.io/docs/policy-library/
+author: skaldhall
+date: 2026/07/21
+tags:
+- attack.persistence
+- attack.t1543
+logsource:
+  product: kubernetes
+detection:
+  base:
+    class_uid: 6003
+  verbs:
+    activity_id: 1
+  res_watch:
+    api.resource.type: customresourcedefinitions
+  res_audit:
+    resource.type: customresourcedefinitions
+  condition: base and verbs and (res_watch or res_audit)
+falsepositives:
+- Operator/Helm installs — whitelist by actor.user.name
+level: medium

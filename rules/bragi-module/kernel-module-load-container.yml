@@ -1,0 +1,30 @@
+title: Kernel module loaded from a container
+id: f15bb0c2-ece8-599c-8951-2b074f409159
+status: experimental
+description: 'A container loading a kernel module is loading code into the host kernel —
+
+  effectively full node takeover. Host-level module loads keep their own high
+
+  rule; container context is critical. Requires a module TracingPolicy (1005).
+
+  '
+references:
+- https://microsoft.github.io/Threat-Matrix-for-Kubernetes/
+- https://tetragon.io/docs/policy-library/
+author: skaldhall
+date: 2026/07/21
+tags:
+- attack.persistence
+- attack.privilege_escalation
+- attack.t1547.006
+logsource:
+  product: linux
+detection:
+  selection:
+    class_uid: 1005
+  ns:
+    k8s.namespace: '*'
+  condition: selection and ns
+falsepositives:
+- A privileged driver-installer DaemonSet (GPU, storage) — whitelist by workload
+level: critical

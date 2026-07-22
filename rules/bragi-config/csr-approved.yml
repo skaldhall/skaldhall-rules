@@ -1,0 +1,32 @@
+title: CertificateSigningRequest approved
+id: ea1f650b-fe9a-5490-b65c-19c297d1abda
+status: experimental
+description: 'Approving a CSR mints a client certificate — an out-of-band kubeconfig
+
+  credential that survives token rotation. Approval by an unexpected principal is
+
+  a backdoor identity.
+
+  '
+references:
+- https://microsoft.github.io/Threat-Matrix-for-Kubernetes/
+- https://tetragon.io/docs/policy-library/
+author: skaldhall
+date: 2026/07/21
+tags:
+- attack.persistence
+- attack.credential_access
+- attack.t1136
+logsource:
+  product: kubernetes
+detection:
+  selection:
+    class_uid: 6003
+  path:
+    http_request.url.path.keyword|contains: /certificatesigningrequests/
+  approve:
+    http_request.url.path.keyword|endswith: /approval
+  condition: selection and path and approve
+falsepositives:
+- kube-controller-manager auto-approving kubelet CSRs (system:* principal) — whitelist by actor
+level: high

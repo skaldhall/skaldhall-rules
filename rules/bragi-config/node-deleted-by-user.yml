@@ -1,0 +1,32 @@
+title: Node deleted by a user
+id: 3ec2d646-179c-5d6c-8690-bb39ec0202f2
+status: experimental
+description: 'Deleting a Node object evicts its workloads and can disrupt the cluster.
+
+  Autoscalers do this as system service accounts and are excluded; a human or non-
+
+  system identity deleting a node is disruptive or malicious.
+
+  '
+references:
+- https://microsoft.github.io/Threat-Matrix-for-Kubernetes/
+- https://tetragon.io/docs/policy-library/
+author: skaldhall
+date: 2026/07/21
+tags:
+- attack.impact
+- attack.t1489
+logsource:
+  product: kubernetes
+detection:
+  selection:
+    class_uid: 6003
+    activity_id: 4
+  res:
+    resource.type: nodes
+  exclusion:
+    actor.user.name|startswith: 'system:'
+  condition: selection and res and not exclusion
+falsepositives:
+- Manual node decommissioning by an administrator — whitelist by actor.user.name
+level: high

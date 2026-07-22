@@ -1,0 +1,40 @@
+# Bragi TracingPolicy — container-escape syscalls (OCSF class 1007)
+#
+# mount/setns/unshare/pivot_root/ptrace do NOT all map to one class under
+# bragi's kernel taxonomy (mount and unshare are unmapped; setns is 3001;
+# ptrace is 1007). Naming the policy "1007-" forces every event it produces to
+# OCSF class 1007 (process activity) so the escape rules — mount-in-container,
+# namespace-escape-syscall, ptrace-in-container — all match on one class plus
+# function_name.
+apiVersion: cilium.io/v1alpha1
+kind: TracingPolicy
+metadata:
+  name: 1007-escape-syscalls
+spec:
+  kprobes:
+    - call: __x64_sys_mount
+      syscall: true
+      args:
+        - index: 0
+          type: string
+    - call: __x64_sys_setns
+      syscall: true
+      args:
+        - index: 0
+          type: int
+    - call: __x64_sys_unshare
+      syscall: true
+      args:
+        - index: 0
+          type: int
+    - call: __x64_sys_ptrace
+      syscall: true
+      args:
+        - index: 0
+          type: int
+    - call: __x64_sys_pivot_root
+      syscall: true
+      args:
+        - index: 0
+          type: string
+# arm64: swap __x64_sys_* for __arm64_sys_* (bragi normalises the prefix).

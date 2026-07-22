@@ -1,0 +1,41 @@
+title: RBAC changed in kube-system
+id: f4f04766-f43d-5663-9d44-65365d3572ca
+status: experimental
+description: 'A Role or RoleBinding change in kube-system can grant control over control-plane
+
+  service accounts. Changes here should come only from upgrades.
+
+  '
+references:
+- https://microsoft.github.io/Threat-Matrix-for-Kubernetes/
+- https://tetragon.io/docs/policy-library/
+author: skaldhall
+date: 2026/07/21
+tags:
+- attack.privilege_escalation
+- attack.t1078
+logsource:
+  product: kubernetes
+detection:
+  base:
+    class_uid: 6003
+  verbs:
+    activity_id:
+    - 1
+    - 3
+    - 4
+  res_watch:
+    api.resource.type:
+    - roles
+    - rolebindings
+  res_audit:
+    resource.type:
+    - roles
+    - rolebindings
+  nskube:
+  - api.resource.namespace: kube-system
+  - resource.namespace: kube-system
+  condition: base and verbs and (res_watch or res_audit) and 1 of nskube
+falsepositives:
+- Cluster upgrades and control-plane operators — whitelist by actor.user.name
+level: high

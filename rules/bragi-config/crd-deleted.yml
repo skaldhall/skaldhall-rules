@@ -1,0 +1,34 @@
+title: CustomResourceDefinition deleted
+id: 6cbe243c-8155-566b-8737-437acb38b1f9
+status: experimental
+description: 'Deleting a CRD deletes every custom resource of that kind and blinds the
+
+  operator that reconciles them — a way to disable security controllers or destroy
+
+  state.
+
+  '
+references:
+- https://microsoft.github.io/Threat-Matrix-for-Kubernetes/
+- https://tetragon.io/docs/policy-library/
+author: skaldhall
+date: 2026/07/21
+tags:
+- attack.impact
+- attack.defense_evasion
+- attack.t1489
+logsource:
+  product: kubernetes
+detection:
+  base:
+    class_uid: 6003
+  verbs:
+    activity_id: 4
+  res_watch:
+    api.resource.type: customresourcedefinitions
+  res_audit:
+    resource.type: customresourcedefinitions
+  condition: base and verbs and (res_watch or res_audit)
+falsepositives:
+- Uninstalling an operator/CRD intentionally — whitelist by actor.user.name
+level: high

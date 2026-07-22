@@ -1,0 +1,32 @@
+title: Namespace-manipulation syscall from a container
+id: 70d464b0-8796-5373-adfd-506c2a726073
+status: experimental
+description: 'setns/unshare/pivot_root change or break out of namespaces — the core of most
+
+  container escapes. Requires an escape-syscall TracingPolicy (class 1007).
+
+  '
+references:
+- https://microsoft.github.io/Threat-Matrix-for-Kubernetes/
+- https://tetragon.io/docs/policy-library/
+author: skaldhall
+date: 2026/07/21
+tags:
+- attack.privilege_escalation
+- attack.t1611
+logsource:
+  product: linux
+detection:
+  selection:
+    class_uid: 1007
+  fn:
+    function_name|contains:
+    - setns
+    - unshare
+    - pivot_root
+  ns:
+    k8s.namespace: '*'
+  condition: selection and fn and ns
+falsepositives:
+- Runtimes/tools that legitimately create namespaces (some CI) — whitelist by workload
+level: high

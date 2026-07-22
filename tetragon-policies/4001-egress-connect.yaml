@@ -1,0 +1,15 @@
+# Bragi TracingPolicy — outbound TCP connects (OCSF class 4001)
+# Feeds imds-access-from-pod. Hooks tcp_connect so dst_endpoint.ip is populated;
+# the IMDS rule matches 169.254.169.254. Kept broad so bragi's own egress
+# enrichment (bragi-network rules) also benefits from runtime connect data.
+apiVersion: cilium.io/v1alpha1
+kind: TracingPolicy
+metadata:
+  name: 4001-egress-connect
+spec:
+  kprobes:
+    - call: tcp_connect
+      syscall: false
+      args:
+        - index: 0
+          type: sock

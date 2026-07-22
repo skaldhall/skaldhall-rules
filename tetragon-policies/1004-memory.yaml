@@ -1,0 +1,19 @@
+# Bragi TracingPolicy — RWX memory protection changes (OCSF class 1004)
+# Feeds rwx-memory-protection. mprotect to PROT_EXEC|PROT_WRITE = code injection prep.
+apiVersion: cilium.io/v1alpha1
+kind: TracingPolicy
+metadata:
+  name: 1004-memory
+spec:
+  kprobes:
+    - call: __x64_sys_mprotect
+      syscall: true
+      args:
+        - index: 2
+          type: int
+      selectors:
+        - matchArgs:
+            - index: 2
+              operator: Mask
+              values: ["7"]   # PROT_READ|WRITE|EXEC bits present
+# arm64: __arm64_sys_mprotect.

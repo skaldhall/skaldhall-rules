@@ -1,0 +1,47 @@
+title: Critical system ConfigMap changed
+id: ebe61441-1e73-53bf-9163-9c663b409492
+status: experimental
+description: 'coredns (DNS poisoning -> cluster-wide MITM), aws-auth (EKS identity ->
+
+  node/cluster takeover), kube-proxy and apiserver-auth ConfigMaps are control-
+
+  plane roots of trust. Modifying them is a high-impact takeover step.
+
+  '
+references:
+- https://microsoft.github.io/Threat-Matrix-for-Kubernetes/
+- https://tetragon.io/docs/policy-library/
+author: skaldhall
+date: 2026/07/21
+tags:
+- attack.defense_evasion
+- attack.credential_access
+- attack.t1556
+logsource:
+  product: kubernetes
+detection:
+  base:
+    class_uid: 6003
+  verbs:
+    activity_id:
+    - 3
+    - 4
+  res_watch:
+    api.resource.type: configmaps
+  res_audit:
+    resource.type: configmaps
+  names:
+  - api.resource.name:
+    - coredns
+    - aws-auth
+    - kube-proxy
+    - extension-apiserver-authentication
+  - resource.name:
+    - coredns
+    - aws-auth
+    - kube-proxy
+    - extension-apiserver-authentication
+  condition: base and verbs and (res_watch or res_audit) and 1 of names
+falsepositives:
+- Legitimate CoreDNS/kube-proxy reconfiguration during upgrades — whitelist by actor.user.name
+level: critical

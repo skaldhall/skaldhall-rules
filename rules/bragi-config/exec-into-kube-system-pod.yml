@@ -1,0 +1,36 @@
+title: Exec or attach into a kube-system pod
+id: 4c4da605-b7ae-5450-9686-dbb04d55c545
+status: experimental
+description: 'An interactive session into a control-plane pod is high-risk: these pods hold
+
+  cluster credentials and run privileged. General pod exec is medium; kube-system
+
+  exec is high.
+
+  '
+references:
+- https://microsoft.github.io/Threat-Matrix-for-Kubernetes/
+- https://tetragon.io/docs/policy-library/
+author: skaldhall
+date: 2026/07/21
+tags:
+- attack.execution
+- attack.lateral_movement
+- attack.t1609
+logsource:
+  product: kubernetes
+detection:
+  selection:
+    class_uid: 6003
+  res:
+    resource.type: pods
+  ns:
+    resource.namespace: kube-system
+  action:
+    http_request.url.path.keyword|contains:
+    - /exec
+    - /attach
+  condition: selection and res and ns and action
+falsepositives:
+- Operators debugging control-plane pods — whitelist by actor.user.name
+level: high

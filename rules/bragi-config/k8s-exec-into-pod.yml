@@ -21,7 +21,7 @@ detection:
     class_uid: 6003
     resource.type: pods
   paths:
-    http_request.url.path|contains:
+    http_request.url.path.keyword|contains:
       - '/exec'
       - '/attach'
   condition: selection and paths

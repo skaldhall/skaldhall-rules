@@ -1,0 +1,29 @@
+title: Pod connected to the cloud metadata service
+id: c2e7dbe8-75f2-5174-b553-37f2e24d1771
+status: experimental
+description: '169.254.169.254 is the cloud Instance Metadata Service — the classic path to
+
+  steal node/cloud credentials from a compromised pod. Workloads almost never need
+
+  it directly. Requires a connect-hook TracingPolicy (class 4001).
+
+  '
+references:
+- https://microsoft.github.io/Threat-Matrix-for-Kubernetes/
+- https://tetragon.io/docs/policy-library/
+author: skaldhall
+date: 2026/07/21
+tags:
+- attack.credential_access
+- attack.t1552.005
+logsource:
+  product: linux
+detection:
+  selection:
+    class_uid: 4001
+  imds:
+    dst_endpoint.ip: 169.254.169.254
+  condition: selection and imds
+falsepositives:
+- A cloud SDK sidecar that legitimately reads instance metadata — whitelist by workload
+level: critical

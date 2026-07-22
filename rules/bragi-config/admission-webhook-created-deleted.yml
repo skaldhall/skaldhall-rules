@@ -1,0 +1,40 @@
+title: Admission webhook configuration created or deleted
+id: 05e5171b-7914-59d6-b3e3-9a2d4a219c77
+status: experimental
+description: 'A Mutating/ValidatingWebhookConfiguration intercepts every matching API request
+
+  cluster-wide: creating one can silently inject sidecars or exfiltrate objects;
+
+  deleting a validating one disables policy enforcement.
+
+  '
+references:
+- https://microsoft.github.io/Threat-Matrix-for-Kubernetes/
+- https://tetragon.io/docs/policy-library/
+author: skaldhall
+date: 2026/07/21
+tags:
+- attack.persistence
+- attack.defense_evasion
+- attack.t1554
+logsource:
+  product: kubernetes
+detection:
+  base:
+    class_uid: 6003
+  verbs:
+    activity_id:
+    - 1
+    - 4
+  res_watch:
+    api.resource.type:
+    - mutatingwebhookconfigurations
+    - validatingwebhookconfigurations
+  res_audit:
+    resource.type:
+    - mutatingwebhookconfigurations
+    - validatingwebhookconfigurations
+  condition: base and verbs and (res_watch or res_audit)
+falsepositives:
+- cert-manager, Istio, OPA/Gatekeeper installs — whitelist by actor.user.name
+level: high

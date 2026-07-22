@@ -1,0 +1,38 @@
+title: Pod may run as root outside system namespaces
+id: 15c0eefe-081b-5e8b-bb0e-7a334696ae06
+status: experimental
+description: 'The pod asserts nothing preventing UID 0, in a non-system namespace. In a
+
+  restricted-PSS environment workloads should declare runAsNonRoot; the exceptions
+
+  are enumerable and worth whitelisting once.
+
+  '
+references:
+- https://microsoft.github.io/Threat-Matrix-for-Kubernetes/
+- https://tetragon.io/docs/policy-library/
+author: skaldhall
+date: 2026/07/21
+tags:
+- attack.privilege_escalation
+logsource:
+  product: kubernetes
+detection:
+  base:
+    class_uid: 6003
+    api.resource.type: pods
+  verbs:
+    activity_id:
+    - 1
+    - 3
+  root:
+    summary.may_run_as_root: true
+  sys:
+    api.resource.namespace:
+    - kube-system
+    - kube-node-lease
+    - kube-public
+  condition: base and verbs and root and not sys
+falsepositives:
+- Workloads with a documented need to run as root — whitelist by workload
+level: medium

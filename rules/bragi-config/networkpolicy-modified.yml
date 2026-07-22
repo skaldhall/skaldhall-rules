@@ -1,0 +1,35 @@
+title: NetworkPolicy created or modified
+id: 7df410b3-fc5f-50d3-b954-742e9ce1e491
+status: experimental
+description: 'In a default-deny cluster every new allow rule widens the attack surface and
+
+  should be change-controlled. Deletion has its own high rule; this covers
+
+  create/modify.
+
+  '
+references:
+- https://microsoft.github.io/Threat-Matrix-for-Kubernetes/
+- https://tetragon.io/docs/policy-library/
+author: skaldhall
+date: 2026/07/21
+tags:
+- attack.defense_evasion
+- attack.t1562.007
+logsource:
+  product: kubernetes
+detection:
+  base:
+    class_uid: 6003
+  verbs:
+    activity_id:
+    - 1
+    - 3
+  res_watch:
+    api.resource.type: networkpolicies
+  res_audit:
+    resource.type: networkpolicies
+  condition: base and verbs and (res_watch or res_audit)
+falsepositives:
+- GitOps-managed network policy — whitelist by actor.user.name
+level: medium

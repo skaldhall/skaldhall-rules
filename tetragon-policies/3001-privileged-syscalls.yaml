@@ -1,0 +1,38 @@
+# Bragi TracingPolicy — privilege changes (OCSF class 3001)
+#
+# Name "3001-" routes these events to OCSF class 3001 (account change).
+# Feeds the bragi-privilege rules (privilege-escalation-to-root, dangerous-capset).
+# capset() = runtime capability acquisition; the set*id family = uid/gid changes.
+apiVersion: cilium.io/v1alpha1
+kind: TracingPolicy
+metadata:
+  name: 3001-privileged-syscalls
+spec:
+  kprobes:
+    - call: __x64_sys_capset
+      syscall: true
+      args:
+        - index: 0
+          type: int
+    - call: __x64_sys_setuid
+      syscall: true
+      args:
+        - index: 0
+          type: int
+      selectors:
+        - matchArgs:
+            - index: 0
+              operator: Equal
+              values: ["0"]     # setuid(0) — becoming root
+    - call: __x64_sys_setgid
+      syscall: true
+      args:
+        - index: 0
+          type: int
+      selectors:
+        - matchArgs:
+            - index: 0
+              operator: Equal
+              values: ["0"]
+# NOTE: on arm64 nodes replace __x64_sys_* with __arm64_sys_*. bragi's parser
+# normalises the arch prefix, so the OCSF routing is identical either way.

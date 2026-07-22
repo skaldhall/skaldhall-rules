@@ -1,0 +1,38 @@
+title: Admission webhook configuration modified
+id: 871cc06e-f819-55bc-891e-b18fc700f54d
+status: experimental
+description: 'An update to a webhook configuration can repoint it or narrow its scope to
+
+  create a bypass. Lower severity than create/delete because certificate rotation
+
+  patches these legitimately.
+
+  '
+references:
+- https://microsoft.github.io/Threat-Matrix-for-Kubernetes/
+- https://tetragon.io/docs/policy-library/
+author: skaldhall
+date: 2026/07/21
+tags:
+- attack.persistence
+- attack.defense_evasion
+- attack.t1554
+logsource:
+  product: kubernetes
+detection:
+  base:
+    class_uid: 6003
+  verbs:
+    activity_id: 3
+  res_watch:
+    api.resource.type:
+    - mutatingwebhookconfigurations
+    - validatingwebhookconfigurations
+  res_audit:
+    resource.type:
+    - mutatingwebhookconfigurations
+    - validatingwebhookconfigurations
+  condition: base and verbs and (res_watch or res_audit)
+falsepositives:
+- cert-manager cainjector patching caBundle (system:* principal) — whitelist by actor.user.name
+level: medium
