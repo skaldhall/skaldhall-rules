@@ -1,13 +1,22 @@
-title: Write to a persistence-sensitive file
+title: Persistence-sensitive file accessed
 id: 963d4a27-02b3-538d-9776-3805976177cf
 status: experimental
-description: 'Writing to ld.so.preload, authorized_keys, systemd units, cron dirs or rc.local
+description: >
+  A process touched a persistence / code-injection location — ld.so.preload,
+  authorized_keys, a systemd unit, a cron dir, or rc.local. Writing to these
+  establishes persistence on the node or container.
 
-  establishes persistence or code-injection on the node/container. Requires a
+  bragi derives OCSF activity_id from the hooked function NAME, and the LSM hook
+  every file policy uses (security_file_permission) has no read/write in its
+  name, so these events arrive as activity_id 0 — the read-vs-write intent lives
+  in the access-mask arg, which the pipeline does not map. This rule therefore
+  matches ACCESS, not strictly writes. In practice most of these paths (preload,
+  systemd, cron, rc.local) are only hooked on write by a typical file-integrity
+  policy, so access ≈ write for them; authorized_keys / .ssh may also be
+  read-monitored (sshd), which the falsepositives cover.
 
-  file-integrity TracingPolicy (class 1001).
-
-  '
+  Requires a file-integrity TracingPolicy (class 1001), e.g. the stock
+  file-monitoring policy plus the serviceaccount-token supplement.
 references:
 - https://microsoft.github.io/Threat-Matrix-for-Kubernetes/
 - https://tetragon.io/docs/policy-library/
@@ -21,7 +30,6 @@ logsource:
 detection:
   selection:
     class_uid: 1001
-    activity_id: 3
   path:
     file.path|contains:
     - /etc/ld.so.preload
@@ -34,4 +42,5 @@ detection:
   condition: selection and path
 falsepositives:
 - Configuration management writing these on purpose — whitelist by workload
+- sshd / systemd / cron legitimately reading authorized_keys or units — whitelist by workload
 level: critical
