@@ -1,0 +1,26 @@
+title: HTTP request rate-limited (429)
+id: 3518e63a-573b-4361-a451-e2fa44344c21
+status: experimental
+description: >
+  A client received 429 Too Many Requests. Sustained 429s indicate a source
+  exceeding rate limits — scraping, credential-stuffing throttled at the edge,
+  or a volumetric abuse attempt.
+references:
+  - https://www.rfc-editor.org/rfc/rfc6585#section-4
+author: skaldhall
+date: 2026/07/23
+tags:
+  - attack.impact
+  - attack.t1499
+logsource:
+  category: webserver
+detection:
+  selection_class:
+    class_uid: 4002
+  selection_status:
+    http_response.code: 429
+  condition: selection_class and selection_status
+falsepositives:
+  - Legitimate clients briefly exceeding a rate limit
+  - Aggressive client-side retry loops
+level: low

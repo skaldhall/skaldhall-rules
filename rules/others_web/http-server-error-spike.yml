@@ -13,8 +13,22 @@ logsource:
 detection:
   selection_class:
     class_uid: 4002
+  # http_response.code is an OCSF int -> mapped `long` in OpenSearch, so a
+  # `|startswith: '5'` wildcard matches nothing (Security Analytics can't
+  # wildcard a numeric field). Enumerate the standard 5xx codes as exact terms.
   selection_5xx:
-    http_response.code|startswith: '5'
+    http_response.code:
+      - 500
+      - 501
+      - 502
+      - 503
+      - 504
+      - 505
+      - 506
+      - 507
+      - 508
+      - 510
+      - 511
   condition: selection_class and selection_5xx
 falsepositives:
   - Application-side bugs unrelated to security

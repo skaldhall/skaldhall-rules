@@ -1,0 +1,30 @@
+title: HTTP authentication or authorization failure
+id: 71f11160-15da-47b5-9862-b0511b48275b
+status: experimental
+description: >
+  A web request was rejected with 401 Unauthorized or 403 Forbidden. Individually
+  routine, but a burst against protected paths points at credential brute-forcing,
+  stolen-token probing, or forced browsing of restricted resources.
+references:
+  - https://www.rfc-editor.org/rfc/rfc7235
+author: skaldhall
+date: 2026/07/23
+tags:
+  - attack.credential_access
+  - attack.t1110
+logsource:
+  category: webserver
+detection:
+  selection_class:
+    class_uid: 4002
+  selection_status:
+    # OCSF int -> `long`; match exact numeric terms (not a string wildcard).
+    http_response.code:
+      - 401
+      - 403
+  condition: selection_class and selection_status
+falsepositives:
+  - Users mistyping credentials or with expired sessions
+  - Endpoints that return 401/403 by design (health probes, pre-auth redirects)
+  - Scanners and crawlers hitting protected paths
+level: low
